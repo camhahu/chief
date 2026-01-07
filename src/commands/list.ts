@@ -1,8 +1,5 @@
 import { readIssues, IssuesNotFoundError, type Issue } from '../store.ts'
-
-const RESET = '\x1b[0m'
-const DIM = '\x1b[2m'
-const GREEN = '\x1b[32m'
+import { RESET, DIM, GREEN } from '../color.ts'
 
 function formatIssue(issue: Issue, indent: string = ''): string {
   const status = issue.done ? `${GREEN}[x]${RESET}` : '[ ]'

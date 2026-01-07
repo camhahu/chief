@@ -1,9 +1,5 @@
 import { readIssues } from '../store.ts'
-
-const RESET = '\x1b[0m'
-const DIM = '\x1b[2m'
-const BOLD = '\x1b[1m'
-const GREEN = '\x1b[32m'
+import { RESET, DIM, BOLD, GREEN } from '../color.ts'
 
 function formatSection(label: string, content: string): string {
   return `${DIM}${label}:${RESET} ${content}`

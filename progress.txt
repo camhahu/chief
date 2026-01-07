@@ -11,12 +11,27 @@
 - CLI tests need absolute paths when running from different cwd - use `join(import.meta.dir, '..', '..')` to get project root
 - Parse JSON input with try/catch, check for SyntaxError to distinguish parse errors from validation errors
 - Use nullish coalescing (`??`) for applying defaults to optional fields
-- ANSI escape codes: `\x1b[2m` for dim, `\x1b[32m` for green, `\x1b[0m` to reset
+- ANSI escape codes: `\x1b[2m` for dim, `\x1b[1m` for bold, `\x1b[0m` to reset
+- Use `Bun.color('colorname', 'ansi')` for terminal colors - returns 256-color ANSI codes, null for non-colors
+- Centralize terminal styling in a shared module when multiple files need same colors/styles
 - Date formatting: `String(n).padStart(2, '0')` for zero-padded numbers
 - For CLI help: use a `Record<string, CommandHelp>` object with usage, description, args, examples for each command
 - Test stderr output with `Bun.spawn` + pipe stderr, then read with `new Response(proc.stderr).text()`
 - Use `new Date().toISOString()` for ISO 8601 timestamps (includes timezone Z suffix)
 - When adding optional fields to an existing type, update all places that create objects of that type (tests, defaults, validation)
+
+---
+
+## 2026-01-07 - s8t9u0
+
+- Refactored ANSI color/style handling to use `Bun.color()` for colors
+- Created `src/color.ts` with centralized exports: RESET, DIM, BOLD, GREEN
+- Updated `src/commands/list.ts` and `src/commands/show.ts` to import from color.ts
+- Files changed: `src/color.ts` (new), `src/commands/list.ts`, `src/commands/show.ts`, `prd.json`
+- **Learnings:**
+  - `Bun.color()` only handles colors, not text styles (bold/dim/reset)
+  - `Bun.color('green', 'ansi')` returns 256-color code `\x1b[38;5;28m` vs basic `\x1b[32m`
+  - Both render visually identical in modern terminals
 
 ---
 

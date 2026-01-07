@@ -288,7 +288,7 @@
       "id": "s8t9u0",
       "title": "Use Bun.color for ANSI colors",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["refactor"],
       "context": "Replace hand-rolled ANSI escape codes with Bun.color() built-in.",
       "criteria": [
@@ -296,7 +296,7 @@
         "Use Bun.color() for all terminal coloring",
         "Output unchanged visually"
       ],
-      "notes": []
+      "notes": ["2026-01-07: Bun.color only supports colors, not styles (bold/dim). Created src/color.ts with Bun.color for green and ANSI codes for styles."]
     },
     {
       "id": "v1w2x3",
