@@ -45,7 +45,7 @@ test('readIssues throws IssuesNotFoundError when file missing', async () => {
   expect(readIssues(testDir)).rejects.toBeInstanceOf(IssuesNotFoundError)
 })
 
-test('writeIssues saves with 2-space indent and trailing newline', async () => {
+test('writeIssues saves with one issue per line and trailing newline', async () => {
   const store = {
     issues: [
       {
@@ -65,9 +65,11 @@ test('writeIssues saves with 2-space indent and trailing newline', async () => {
   await writeIssues(store, testDir)
 
   const content = await Bun.file(issuesPath).text()
+  const lines = content.split('\n')
 
-  expect(content).toContain('  "issues"')
-  expect(content).toContain('    {')
+  expect(lines[0]).toBe('{"issues": [')
+  expect(lines[1]).toContain('"id":"abc123"')
+  expect(lines[2]).toBe(']}')
   expect(content.endsWith('\n')).toBe(true)
   expect(JSON.parse(content)).toEqual(store)
 })

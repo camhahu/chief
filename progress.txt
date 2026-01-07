@@ -1,3 +1,4 @@
+- Issues are stored 1 per line for compact storage and clean git diffs: `{"issues": [\n{...issue1...},\n{...issue2...}\n]}`
 - When updating `done` field via update command, also update `doneAt` to maintain consistency with done/reopen commands
 - Use `resolveParentIdOrExit(store, parentIdPrefix)` from store.ts to resolve parent ID prefix to full ID (handles null passthrough)
 
@@ -46,6 +47,18 @@
 - Use `new URL('..', import.meta.url).pathname` for resolved relative paths - removes `..` from the path
 - Use `Bun.write()` instead of `mkdir` + write - it creates parent directories automatically
 - Implement `dirname()` locally: find last `/`, handle edge cases for root and no-slash paths
+
+---
+
+## 2026-01-08 - 953632
+
+- Changed issues.json format from pretty-printed to 1 issue per line
+- Each issue is serialized as compact JSON on its own line
+- Files changed: `src/store.ts`, `src/store.test.ts`
+- **Learnings:**
+  - Format: `{"issues": [\n{...},\n{...}\n]}` - still valid JSON, but one issue per line
+  - Git diffs now show only changed lines instead of entire reindented blocks
+  - File size reduced from 832 lines to 49 lines for the project's issues
 
 ---
 

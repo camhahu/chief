@@ -77,7 +77,8 @@ export async function writeIssues(
     throw new IssuesNotFoundError()
   }
 
-  const json = JSON.stringify(store, null, 2) + '\n'
+  const lines = store.issues.map((issue) => JSON.stringify(issue))
+  const json = `{"issues": [\n${lines.join(',\n')}\n]}\n`
   await Bun.write(path, json)
 }
 
