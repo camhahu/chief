@@ -193,36 +193,6 @@
     },
 
     {
-      "id": "d3e4f5",
-      "title": "chief criteria",
-      "parent": null,
-      "done": false,
-      "labels": ["feature"],
-      "context": "Add or remove acceptance criteria from an issue.",
-      "criteria": [
-        "--add <text> appends to criteria array",
-        "--rm <index> removes by index",
-        "Fails if ID not found",
-        "Fails if index out of bounds for --rm"
-      ],
-      "notes": []
-    },
-    {
-      "id": "b6c7d8",
-      "title": "chief label",
-      "parent": null,
-      "done": false,
-      "labels": ["feature"],
-      "context": "Add or remove labels from an issue.",
-      "criteria": [
-        "--add <label> appends to labels if not present",
-        "--rm <label> removes from labels (no-op if not present)",
-        "Fails if ID not found"
-      ],
-      "notes": []
-    },
-
-    {
       "id": "g1h2i3",
       "title": "chief list",
       "parent": null,
@@ -252,20 +222,7 @@
       ],
       "notes": []
     },
-    {
-      "id": "i5j6k7",
-      "title": "chief status",
-      "parent": null,
-      "done": false,
-      "labels": ["feature"],
-      "context": "Quick overview of project health.",
-      "criteria": [
-        "Shows count of open vs done issues",
-        "Shows count by label",
-        "Single line summary suitable for shell prompt"
-      ],
-      "notes": []
-    },
+
     {
       "id": "j7k8l9",
       "title": "CLI help and error handling",
@@ -293,6 +250,79 @@
         "Detects OS (darwin/linux/windows) and arch (x64/arm64)",
         "Downloads correct binary from GitHub releases",
         "Adds to PATH if not already present"
+      ],
+      "notes": []
+    },
+    {
+      "id": "m2n3o4",
+      "title": "chief update command",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Partial update of an issue. Saves agents from read-modify-write cycle for simple field changes.",
+      "criteria": [
+        "chief update <id> '{\"field\": \"value\"}' merges JSON into existing issue",
+        "Fields present in JSON replace existing values",
+        "Fields omitted from JSON are left unchanged",
+        "Cannot change id field (error if attempted)",
+        "Validates result before saving"
+      ],
+      "notes": []
+    },
+    {
+      "id": "p5q6r7",
+      "title": "Add doneAt timestamp",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Record when issues are completed for tracking velocity and history.",
+      "criteria": [
+        "chief done sets doneAt to current ISO 8601 timestamp",
+        "chief reopen clears doneAt to null",
+        "chief show displays doneAt when present",
+        "Existing issues without doneAt continue to work"
+      ],
+      "notes": []
+    },
+    {
+      "id": "s8t9u0",
+      "title": "Use Bun.color for ANSI colors",
+      "parent": null,
+      "done": false,
+      "labels": ["refactor"],
+      "context": "Replace hand-rolled ANSI escape codes with Bun.color() built-in.",
+      "criteria": [
+        "Remove duplicated ANSI constants from list.ts and show.ts",
+        "Use Bun.color() for all terminal coloring",
+        "Output unchanged visually"
+      ],
+      "notes": []
+    },
+    {
+      "id": "v1w2x3",
+      "title": "Extract findIssueOrExit helper",
+      "parent": null,
+      "done": false,
+      "labels": ["refactor"],
+      "context": "DRY up duplicated issue lookup pattern across commands.",
+      "criteria": [
+        "New helper function in shared module",
+        "Used by done, reopen, remove, show, note commands",
+        "Prints error to stderr and exits 1 if not found"
+      ],
+      "notes": []
+    },
+    {
+      "id": "y4z5a6",
+      "title": "Clean up help text",
+      "parent": null,
+      "done": false,
+      "labels": ["refactor"],
+      "context": "Help text currently lists commands that don't exist (criteria, label, edit, status).",
+      "criteria": [
+        "Remove non-existent commands from --help output",
+        "Add update command to --help output",
+        "Verify all listed commands actually work"
       ],
       "notes": []
     }
