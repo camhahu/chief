@@ -8,6 +8,7 @@ import { reopen } from './commands/reopen.ts'
 import { remove } from './commands/remove.ts'
 import { show } from './commands/show.ts'
 import { note } from './commands/note.ts'
+import { update } from './commands/update.ts'
 import { printMainHelp, printCommandHelp } from './help.ts'
 
 const args = process.argv.slice(2)
@@ -75,6 +76,14 @@ switch (command) {
       await note(args[1], args[2])
     } else {
       console.error('Usage: chief note <id> <text>')
+      process.exit(1)
+    }
+    break
+  case 'update':
+    if (args[1] && args[2]) {
+      await update(args[1], args[2])
+    } else {
+      console.error('Usage: chief update <id> \'{"field": "value"}\'')
       process.exit(1)
     }
     break

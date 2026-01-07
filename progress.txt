@@ -16,6 +16,16 @@
 
 ---
 
+## 2026-01-07 - m2n3o4
+
+- Implemented `chief update` command in `src/commands/update.ts`
+- Files changed: `src/commands/update.ts`, `src/commands/update.test.ts`, `src/index.ts`, `src/help.ts`, `prd.json`
+- **Learnings:**
+  - Merge updates by iterating over a whitelist of updateable fields to prevent ID mutation
+  - Reuse existing validation functions (validateIssueFields, validateParentRef) for update validation
+
+---
+
 ## 2026-01-07 - j7k8l9
 
 - Implemented CLI help and error handling in `src/help.ts` and `src/index.ts`

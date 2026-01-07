@@ -47,28 +47,16 @@ test('chief <cmd> -h is alias for --help', async () => {
 })
 
 test('unknown command prints error to stderr and exits 1', async () => {
-  const proc = Bun.spawn(['bun', 'run', CLI, 'unknowncommand'], {
-    stdout: 'pipe',
-    stderr: 'pipe',
-  })
+  const result = await $`bun run ${CLI} unknowncommand`.nothrow()
 
-  const stderr = await new Response(proc.stderr).text()
-  const exitCode = await proc.exited
-
-  expect(stderr).toContain('Unknown command: unknowncommand')
-  expect(stderr).toContain("Run 'chief --help' for usage.")
-  expect(exitCode).toBe(1)
+  expect(result.stderr.toString()).toContain('Unknown command: unknowncommand')
+  expect(result.stderr.toString()).toContain("Run 'chief --help' for usage.")
+  expect(result.exitCode).toBe(1)
 })
 
 test('missing required argument prints error to stderr and exits 1', async () => {
-  const proc = Bun.spawn(['bun', 'run', CLI, 'done'], {
-    stdout: 'pipe',
-    stderr: 'pipe',
-  })
+  const result = await $`bun run ${CLI} done`.nothrow()
 
-  const stderr = await new Response(proc.stderr).text()
-  const exitCode = await proc.exited
-
-  expect(stderr).toContain('Usage: chief done <id>')
-  expect(exitCode).toBe(1)
+  expect(result.stderr.toString()).toContain('Usage: chief done <id>')
+  expect(result.exitCode).toBe(1)
 })

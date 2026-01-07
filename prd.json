@@ -257,7 +257,7 @@
       "id": "m2n3o4",
       "title": "chief update command",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Partial update of an issue. Saves agents from read-modify-write cycle for simple field changes.",
       "criteria": [

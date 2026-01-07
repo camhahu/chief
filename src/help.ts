@@ -31,6 +31,10 @@ const commands: Record<string, { usage: string; description: string }> = {
     usage: 'chief show <id>',
     description: 'Show full details of an issue',
   },
+  update: {
+    usage: "chief update <id> '{\"field\": \"value\"}'",
+    description: 'Update fields on an existing issue',
+  },
 }
 
 export function printMainHelp(): void {
