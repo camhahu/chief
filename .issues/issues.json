@@ -813,8 +813,8 @@
       "id": "b29691",
       "title": "Test isolation: findIssuesPath walks up to project .issues",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-07T23:05:03.636Z",
       "labels": [
         "bug",
         "testing"

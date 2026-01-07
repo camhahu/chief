@@ -60,7 +60,8 @@ test('chief list distinguishes done issues', async () => {
 test('chief list fails without .issues directory', async () => {
   const emptyDir = `${PROJECT_ROOT}/.testfiles/list-no-init`
   await $`rm -rf ${emptyDir}`.quiet()
-  await $`mkdir -p ${emptyDir}`.quiet()
+  await $`mkdir -p ${emptyDir}/.git`.quiet()
+  await Bun.write(`${emptyDir}/.git/HEAD`, '')
 
   const result = await $`bun run ${CLI} list`.cwd(emptyDir).quiet().nothrow()
 

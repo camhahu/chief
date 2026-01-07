@@ -45,6 +45,10 @@ export async function findIssuesPath(
       return issuesPath
     }
 
+    if (await Bun.file(`${dir}/.git/HEAD`).exists()) {
+      return null
+    }
+
     const parent = dirname(dir)
     if (parent === dir) {
       return null

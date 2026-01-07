@@ -24,6 +24,8 @@ export function setupTestDir(name: string, options?: SetupOptions): TestContext 
   beforeEach(async () => {
     await $`rm -rf ${testDir}`.quiet()
     await $`mkdir -p ${testDir}`.quiet()
+    await $`mkdir -p ${testDir}/.git`.quiet()
+    await Bun.write(`${testDir}/.git/HEAD`, '')
     if (createIssuesDir) {
       await $`mkdir -p ${testDir}/.issues`.quiet()
       await Bun.write(issuesPath, '{"issues":[]}\n')
