@@ -7,6 +7,24 @@ export class ValidationError extends Error {
   }
 }
 
+export function parseJsonOrExit<T>(
+  json: string,
+  parse: (json: string) => T
+): T {
+  try {
+    return parse(json)
+  } catch (err) {
+    if (err instanceof SyntaxError) {
+      console.error('Invalid JSON:', err.message)
+    } else if (err instanceof ValidationError) {
+      console.error(err.message)
+    } else {
+      throw err
+    }
+    process.exit(1)
+  }
+}
+
 export function validateIssueFields(issue: unknown): issue is Issue {
   if (typeof issue !== 'object' || issue === null) {
     throw new ValidationError('Issue must be an object')

@@ -1,5 +1,6 @@
 # Reusable Patterns
 
+- Use `parseJsonOrExit(json, parseFn)` from validate.ts for JSON input commands - handles SyntaxError and ValidationError uniformly
 - Command registry pattern: define `{ usage, description, handler }` per command in single file, derive help text and routing from it
 - Use `arg(args, index, usage)` helper that checks for undefined and exits with usage message - provides type narrowing
 - Define valid fields as a simple array, use `filter` + `!includes` to detect unknown fields
@@ -31,6 +32,17 @@
 - For `--key=value` flags: use `args.find(a => a.startsWith('--key='))?.slice('--key='.length)`
 - When filtering hierarchical data with parent/child: compute child matches first, show parent if it matches OR if any child matches (provides context)
 - When validating parent changes, check both directions: target parent cannot be a child AND issue cannot have children if becoming a child
+
+---
+
+## 2026-01-08 - d4aebf
+
+- Extracted `parseJsonOrExit` helper in validate.ts for JSON parse + error handling
+- Refactored new.ts and update.ts to use the shared helper
+- Files changed: `src/validate.ts`, `src/commands/new.ts`, `src/commands/update.ts`, `prd.json`
+- **Learnings:**
+  - Generic helper `parseJsonOrExit<T>(json, parseFn)` handles both SyntaxError and ValidationError uniformly
+  - Place JSON parsing helpers in validate.ts alongside ValidationError since they're tightly coupled
 
 ---
 

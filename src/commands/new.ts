@@ -1,6 +1,6 @@
 import { readIssues, writeIssues, type Issue } from '../store.ts'
 import { generateId } from '../id.ts'
-import { validateNewIssue, ValidationError } from '../validate.ts'
+import { validateNewIssue, ValidationError, parseJsonOrExit } from '../validate.ts'
 
 function parseInput(json: string): Partial<Issue> {
   const parsed = JSON.parse(json)
@@ -17,19 +17,7 @@ function parseInput(json: string): Partial<Issue> {
 }
 
 export async function newIssue(jsonArg: string): Promise<void> {
-  let input: Partial<Issue>
-  try {
-    input = parseInput(jsonArg)
-  } catch (err) {
-    if (err instanceof SyntaxError) {
-      console.error('Invalid JSON:', err.message)
-    } else if (err instanceof ValidationError) {
-      console.error(err.message)
-    } else {
-      throw err
-    }
-    process.exit(1)
-  }
+  const input = parseJsonOrExit(jsonArg, parseInput)
 
   const store = await readIssues()
   const id = generateId(store.issues.map((i) => i.id))

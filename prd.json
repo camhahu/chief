@@ -465,8 +465,8 @@
       "id": "d4aebf",
       "title": "DRY up JSON parse + ValidationError handling",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["refactor"],
       "context": "new.ts and update.ts have identical try/catch patterns for parsing JSON and handling SyntaxError/ValidationError. This pattern will repeat for any command taking JSON input.",
       "criteria": [

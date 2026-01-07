@@ -1,5 +1,5 @@
 import { readIssues, writeIssues, findIssueOrExit, type Issue } from '../store.ts'
-import { validateIssueFields, validateParentRef, ValidationError } from '../validate.ts'
+import { validateIssueFields, validateParentRef, ValidationError, parseJsonOrExit } from '../validate.ts'
 
 const UPDATABLE_FIELDS = ['title', 'parent', 'done', 'labels', 'context', 'criteria', 'notes']
 
@@ -25,19 +25,7 @@ function parseUpdateInput(json: string): Partial<Issue> {
 }
 
 export async function update(idPrefix: string, jsonArg: string): Promise<void> {
-  let updates: Partial<Issue>
-  try {
-    updates = parseUpdateInput(jsonArg)
-  } catch (err) {
-    if (err instanceof SyntaxError) {
-      console.error('Invalid JSON:', err.message)
-    } else if (err instanceof ValidationError) {
-      console.error(err.message)
-    } else {
-      throw err
-    }
-    process.exit(1)
-  }
+  const updates = parseJsonOrExit(jsonArg, parseUpdateInput)
 
   const store = await readIssues()
   const issue = findIssueOrExit(store, idPrefix)
