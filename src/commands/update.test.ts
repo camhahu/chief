@@ -42,6 +42,7 @@ test('chief update fails when trying to change id', async () => {
 
   const result = await $`bun run ${CLI} update ${id} '{"id":"newid"}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -51,6 +52,7 @@ test('chief update fails when trying to change id', async () => {
 test('chief update fails with unknown ID', async () => {
   const result = await $`bun run ${CLI} update nonexistent '{"title":"test"}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -65,6 +67,7 @@ test('chief update validates result before saving', async () => {
 
   const result = await $`bun run ${CLI} update ${id} '{"title":""}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -79,6 +82,7 @@ test('chief update fails with invalid JSON', async () => {
 
   const result = await $`bun run ${CLI} update ${id} 'not json'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -93,6 +97,7 @@ test('chief update validates parent reference', async () => {
 
   const result = await $`bun run ${CLI} update ${id} '{"parent":"nonexistent"}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -163,6 +168,7 @@ test('chief update prevents issue with children from becoming a child', async ()
 
   const result = await $`bun run ${CLI} update ${parentId} '{"parent":"${grandparentId}"}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -171,7 +177,7 @@ test('chief update prevents issue with children from becoming a child', async ()
 })
 
 test('chief update fails without arguments', async () => {
-  const result = await $`bun run ${CLI} update`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} update`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Usage:')
@@ -185,6 +191,7 @@ test('chief update warns on unknown fields but still applies valid fields', asyn
 
   const result = await $`bun run ${CLI} update ${id} '{"title":"updated","typo":"ignored"}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(0)

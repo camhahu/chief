@@ -44,7 +44,7 @@ test('chief <cmd> -h is alias for --help', async () => {
 })
 
 test('unknown command prints error to stderr and exits 1', async () => {
-  const result = await $`bun run ${CLI} unknowncommand`.nothrow()
+  const result = await $`bun run ${CLI} unknowncommand`.quiet().nothrow()
 
   expect(result.stderr.toString()).toContain('Unknown command: unknowncommand')
   expect(result.stderr.toString()).toContain("Run 'chief --help' for usage.")
@@ -52,7 +52,7 @@ test('unknown command prints error to stderr and exits 1', async () => {
 })
 
 test('missing required argument prints error to stderr and exits 1', async () => {
-  const result = await $`bun run ${CLI} done`.nothrow()
+  const result = await $`bun run ${CLI} done`.quiet().nothrow()
 
   expect(result.stderr.toString()).toContain('Usage: chief done <id>')
   expect(result.exitCode).toBe(1)

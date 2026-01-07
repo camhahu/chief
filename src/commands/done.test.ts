@@ -35,7 +35,7 @@ test('chief done sets doneAt timestamp', async () => {
 })
 
 test('chief done fails with unknown ID', async () => {
-  const result = await $`bun run ${CLI} done nonexistent`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} done nonexistent`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Issue nonexistent not found')
@@ -61,7 +61,7 @@ test('chief done is idempotent', async () => {
 })
 
 test('chief done fails without ID argument', async () => {
-  const result = await $`bun run ${CLI} done`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} done`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Usage: chief done <id>')

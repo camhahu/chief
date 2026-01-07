@@ -46,6 +46,13 @@
 
 ---
 
+## 2026-01-08 - 6110aa
+
+- Added `.quiet()` to all `.nothrow()` calls in test files to suppress terminal output on passing tests
+- Files changed: `src/help.test.ts`, `src/commands/done.test.ts`, `src/commands/reopen.test.ts`, `src/commands/remove.test.ts`, `src/commands/note.test.ts`, `src/commands/new.test.ts`, `src/commands/show.test.ts`, `src/commands/list.test.ts`, `src/commands/update.test.ts`
+
+---
+
 ## 2026-01-08 - c9f3a4
 
 - Exported `Command` interface from commands.ts

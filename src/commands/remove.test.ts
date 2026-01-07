@@ -18,14 +18,14 @@ test('chief remove deletes issue from list', async () => {
 })
 
 test('chief remove fails with unknown ID', async () => {
-  const result = await $`bun run ${CLI} remove nonexistent`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} remove nonexistent`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Issue nonexistent not found')
 })
 
 test('chief remove fails without ID argument', async () => {
-  const result = await $`bun run ${CLI} remove`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} remove`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Usage: chief remove <id>')

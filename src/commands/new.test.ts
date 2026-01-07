@@ -56,6 +56,7 @@ test('chief new applies user-provided fields', async () => {
 test('chief new validates parent reference', async () => {
   const result = await $`bun run ${CLI} new '{"title":"child","parent":"nonexistent"}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -76,6 +77,7 @@ test('chief new generates unique IDs', async () => {
 test('chief new fails with invalid JSON', async () => {
   const result = await $`bun run ${CLI} new 'not json'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -85,6 +87,7 @@ test('chief new fails with invalid JSON', async () => {
 test('chief new fails without title', async () => {
   const result = await $`bun run ${CLI} new '{"labels":["bug"]}'`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -123,6 +126,7 @@ test('chief new rejects nested children (max 1 level)', async () => {
   const grandchildResult =
     await $`bun run ${CLI} new ${JSON.stringify({ title: 'grandchild', parent: childId })}`
       .cwd(testDir)
+      .quiet()
       .nothrow()
 
   expect(grandchildResult.exitCode).toBe(1)

@@ -104,7 +104,7 @@ test('chief show does not display doneAt for open issues', async () => {
 })
 
 test('chief show fails for unknown ID', async () => {
-  const result = await $`bun run ${CLI} show abcdef`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} show abcdef`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('abcdef')
@@ -112,7 +112,7 @@ test('chief show fails for unknown ID', async () => {
 })
 
 test('chief show without ID prints usage', async () => {
-  const result = await $`bun run ${CLI} show`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} show`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Usage:')
@@ -168,6 +168,7 @@ test('chief show fails with ambiguous prefix', async () => {
     const ambiguousPrefix = id1.slice(0, commonLen)
     const showResult = await $`bun run ${CLI} show ${ambiguousPrefix}`
       .cwd(testDir)
+      .quiet()
       .nothrow()
 
     expect(showResult.exitCode).toBe(1)

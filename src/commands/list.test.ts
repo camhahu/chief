@@ -62,7 +62,7 @@ test('chief list fails without .issues directory', async () => {
   await $`rm -rf ${emptyDir}`.quiet()
   await $`mkdir -p ${emptyDir}`.quiet()
 
-  const result = await $`bun run ${CLI} list`.cwd(emptyDir).nothrow()
+  const result = await $`bun run ${CLI} list`.cwd(emptyDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('chief init')
@@ -107,6 +107,7 @@ test('chief list --done shows only done issues', async () => {
 test('chief list --open and --done are mutually exclusive', async () => {
   const result = await $`bun run ${CLI} list --open --done`
     .cwd(testDir)
+    .quiet()
     .nothrow()
 
   expect(result.exitCode).toBe(1)

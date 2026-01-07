@@ -662,8 +662,8 @@
       "id": "6110aa",
       "title": "Tests should not output to stdout in happy case",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-07T15:52:20.990Z",
       "labels": [
         "testing"
       ],
@@ -806,6 +806,24 @@
         "findIssueOrExit renamed or split",
         "Callers handle not-found case",
         "Store module has no process.exit calls"
+      ],
+      "notes": []
+    },
+    {
+      "id": "b29691",
+      "title": "Test isolation: findIssuesPath walks up to project .issues",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "bug",
+        "testing"
+      ],
+      "context": "Tests for findIssuesPath, readIssues, writeIssues (file missing cases) and list (no .issues dir) fail because findIssuesPath walks up the directory tree and finds the project own .issues/issues.json instead of returning null. The test dirs are inside .testfiles/ which is under the project root.",
+      "criteria": [
+        "findIssuesPath tests correctly return null when no .issues found in test dir hierarchy",
+        "readIssues/writeIssues tests correctly throw when file missing in test dir",
+        "list test correctly fails when no .issues directory exists"
       ],
       "notes": []
     }

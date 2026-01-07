@@ -37,7 +37,7 @@ test('chief reopen clears doneAt to null', async () => {
 })
 
 test('chief reopen fails with unknown ID', async () => {
-  const result = await $`bun run ${CLI} reopen nonexistent`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} reopen nonexistent`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Issue nonexistent not found')
@@ -57,7 +57,7 @@ test('chief reopen is idempotent', async () => {
 })
 
 test('chief reopen fails without ID argument', async () => {
-  const result = await $`bun run ${CLI} reopen`.cwd(testDir).nothrow()
+  const result = await $`bun run ${CLI} reopen`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Usage: chief reopen <id>')
