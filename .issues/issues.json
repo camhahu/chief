@@ -695,8 +695,8 @@
       "id": "c6aa96",
       "title": "Parent ID field should support prefix matching",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-07T23:19:22.353Z",
       "labels": [
         "bug",
         "ux"

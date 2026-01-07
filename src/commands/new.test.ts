@@ -60,7 +60,7 @@ test('chief new validates parent reference', async () => {
     .nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('Parent nonexistent does not exist')
+  expect(result.stderr.toString()).toContain('Parent nonexistent not found')
 })
 
 test('chief new generates unique IDs', async () => {
@@ -131,4 +131,42 @@ test('chief new rejects nested children (max 1 level)', async () => {
 
   expect(grandchildResult.exitCode).toBe(1)
   expect(grandchildResult.stderr.toString()).toContain('Max 1 level of nesting')
+})
+
+test('chief new accepts parent ID prefix', async () => {
+  const parentResult = await $`bun run ${CLI} new '{"title":"parent"}'`
+    .cwd(testDir)
+    .text()
+  const parentId = parentResult.trim()
+  const prefix = parentId.slice(0, 3)
+
+  const childResult =
+    await $`bun run ${CLI} new ${JSON.stringify({ title: 'child', parent: prefix })}`
+      .cwd(testDir)
+      .text()
+  const childId = childResult.trim()
+
+  const content = await Bun.file(issuesPath).json()
+  const child = content.issues.find((i: { id: string }) => i.id === childId)
+  expect(child.parent).toBe(parentId)
+})
+
+test('chief new fails with ambiguous parent prefix', async () => {
+  const ids: string[] = []
+  const enoughToGuaranteeCollision = 17
+  for (let i = 0; i < enoughToGuaranteeCollision; i++) {
+    const id = (await $`bun run ${CLI} new '{"title":"parent${i}"}'`.cwd(testDir).text()).trim()
+    ids.push(id)
+  }
+
+  const firstChars = ids.map((id) => id[0]!)
+  const duplicateChar = firstChars.find((c, i) => firstChars.indexOf(c) !== i)!
+
+  const result = await $`bun run ${CLI} new ${JSON.stringify({ title: 'child', parent: duplicateChar })}`
+    .cwd(testDir)
+    .quiet()
+    .nothrow()
+
+  expect(result.exitCode).toBe(1)
+  expect(result.stderr.toString()).toContain('Ambiguous parent ID prefix')
 })

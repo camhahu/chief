@@ -101,7 +101,7 @@ test('chief update validates parent reference', async () => {
     .nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('does not exist')
+  expect(result.stderr.toString()).toContain('Parent nonexistent not found')
 })
 
 test('chief update can clear parent (promote to top-level)', async () => {
@@ -234,4 +234,52 @@ test('chief update with done: false clears doneAt', async () => {
   issue = content.issues.find((i: { id: string }) => i.id === id)
   expect(issue.done).toBe(false)
   expect(issue.doneAt).toBeNull()
+})
+
+test('chief update accepts parent ID prefix', async () => {
+  const parent1Result = await $`bun run ${CLI} new '{"title":"parent1"}'`
+    .cwd(testDir)
+    .text()
+  const parent1Id = parent1Result.trim()
+
+  const parent2Result = await $`bun run ${CLI} new '{"title":"parent2"}'`
+    .cwd(testDir)
+    .text()
+  const parent2Id = parent2Result.trim()
+  const prefix = parent2Id.slice(0, 3)
+
+  const childResult = await $`bun run ${CLI} new '{"title":"child","parent":"${parent1Id}"}'`
+    .cwd(testDir)
+    .text()
+  const childId = childResult.trim()
+
+  await $`bun run ${CLI} update ${childId} '{"parent":"${prefix}"}'`
+    .cwd(testDir)
+    .quiet()
+
+  const content = await Bun.file(issuesPath).json()
+  const child = content.issues.find((i: { id: string }) => i.id === childId)
+  expect(child.parent).toBe(parent2Id)
+})
+
+test('chief update fails with ambiguous parent prefix', async () => {
+  const ids: string[] = []
+  const enoughToGuaranteeCollision = 17
+  for (let i = 0; i < enoughToGuaranteeCollision; i++) {
+    const id = (await $`bun run ${CLI} new '{"title":"parent${i}"}'`.cwd(testDir).text()).trim()
+    ids.push(id)
+  }
+
+  const firstChars = ids.map((id) => id[0]!)
+  const duplicateChar = firstChars.find((c, i) => firstChars.indexOf(c) !== i)!
+
+  const childId = (await $`bun run ${CLI} new '{"title":"child"}'`.cwd(testDir).text()).trim()
+
+  const result = await $`bun run ${CLI} update ${childId} ${JSON.stringify({ parent: duplicateChar })}`
+    .cwd(testDir)
+    .quiet()
+    .nothrow()
+
+  expect(result.exitCode).toBe(1)
+  expect(result.stderr.toString()).toContain('Ambiguous parent ID prefix')
 })

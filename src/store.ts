@@ -81,16 +81,16 @@ export async function writeIssues(
   await Bun.write(path, json)
 }
 
-export function findIssueOrExit(store: IssuesStore, idPrefix: string): Issue {
+export function findIssueOrExit(store: IssuesStore, idPrefix: string, label = 'Issue'): Issue {
   const matches = store.issues.filter((i) => i.id.startsWith(idPrefix))
 
   if (matches.length === 0) {
-    console.error(`Issue ${idPrefix} not found`)
+    console.error(`${label} ${idPrefix} not found`)
     process.exit(1)
   }
 
   if (matches.length > 1) {
-    console.error(`Ambiguous ID prefix '${idPrefix}' matches:`)
+    console.error(`Ambiguous ${label.toLowerCase()} ID prefix '${idPrefix}' matches:`)
     for (const match of matches) {
       console.error(`  ${match.id} - ${match.title}`)
     }
@@ -98,4 +98,14 @@ export function findIssueOrExit(store: IssuesStore, idPrefix: string): Issue {
   }
 
   return matches[0]!
+}
+
+export function resolveParentIdOrExit(
+  store: IssuesStore,
+  parentIdPrefix: string | null
+): string | null {
+  if (parentIdPrefix === null) {
+    return null
+  }
+  return findIssueOrExit(store, parentIdPrefix, 'Parent').id
 }

@@ -1,4 +1,4 @@
-import { readIssues, writeIssues, type Issue } from '../store.ts'
+import { readIssues, writeIssues, resolveParentIdOrExit, type Issue } from '../store.ts'
 import { generateId } from '../id.ts'
 import { validateNewIssue, ValidationError, validateOrExit, parseJsonOrExit } from '../validate.ts'
 import { getDefault } from '../schema.ts'
@@ -23,10 +23,12 @@ export async function newIssue(jsonArg: string): Promise<void> {
   const store = await readIssues()
   const id = generateId(store.issues.map((i) => i.id))
 
+  const parentId = resolveParentIdOrExit(store, input.parent ?? getDefault('parent'))
+
   const issue: Issue = {
     id,
     title: input.title!,
-    parent: input.parent ?? getDefault('parent'),
+    parent: parentId,
     done: input.done ?? getDefault('done'),
     doneAt: input.doneAt ?? getDefault('doneAt'),
     labels: input.labels ?? getDefault('labels'),
