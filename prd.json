@@ -495,8 +495,8 @@
       "id": "f6c0d1",
       "title": "Consolidate Issue type and valid fields",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["refactor"],
       "context": "Issue fields are defined in multiple places: store.ts (type), new.ts (defaults), update.ts (field assignment), validate.ts (field checks). Adding a field requires changes in 4+ files.",
       "criteria": [

@@ -1,6 +1,7 @@
 import { readIssues, writeIssues, type Issue } from '../store.ts'
 import { generateId } from '../id.ts'
-import { validateNewIssue, ValidationError, parseJsonOrExit } from '../validate.ts'
+import { validateNewIssue, ValidationError, validateOrExit, parseJsonOrExit } from '../validate.ts'
+import { getDefault } from '../schema.ts'
 
 function parseInput(json: string): Partial<Issue> {
   const parsed = JSON.parse(json)
@@ -25,24 +26,16 @@ export async function newIssue(jsonArg: string): Promise<void> {
   const issue: Issue = {
     id,
     title: input.title!,
-    parent: input.parent ?? null,
-    done: input.done ?? false,
-    doneAt: input.doneAt ?? null,
-    labels: input.labels ?? [],
-    context: input.context ?? '',
-    criteria: input.criteria ?? [],
-    notes: input.notes ?? [],
+    parent: input.parent ?? getDefault('parent'),
+    done: input.done ?? getDefault('done'),
+    doneAt: input.doneAt ?? getDefault('doneAt'),
+    labels: input.labels ?? getDefault('labels'),
+    context: input.context ?? getDefault('context'),
+    criteria: input.criteria ?? getDefault('criteria'),
+    notes: input.notes ?? getDefault('notes'),
   }
 
-  try {
-    validateNewIssue(issue, store.issues)
-  } catch (err) {
-    if (err instanceof ValidationError) {
-      console.error(err.message)
-      process.exit(1)
-    }
-    throw err
-  }
+  validateOrExit(() => validateNewIssue(issue, store.issues))
 
   store.issues.push(issue)
   await writeIssues(store)

@@ -1,16 +1,22 @@
 import type { Issue, IssuesStore } from './store'
+import { ALL_FIELD_NAMES, validateField } from './schema.ts'
+import { ValidationError } from './errors.ts'
 
-export class ValidationError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'ValidationError'
+export { ValidationError }
+
+export function validateOrExit(fn: () => void): void {
+  try {
+    fn()
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      console.error(err.message)
+      process.exit(1)
+    }
+    throw err
   }
 }
 
-export function parseJsonOrExit<T>(
-  json: string,
-  parse: (json: string) => T
-): T {
+export function parseJsonOrExit<T>(json: string, parse: (json: string) => T): T {
   try {
     return parse(json)
   } catch (err) {
@@ -32,52 +38,8 @@ export function validateIssueFields(issue: unknown): issue is Issue {
 
   const obj = issue as Record<string, unknown>
 
-  if (typeof obj.id !== 'string' || obj.id.length === 0) {
-    throw new ValidationError('Issue must have a non-empty string id')
-  }
-
-  if (typeof obj.title !== 'string' || obj.title.length === 0) {
-    throw new ValidationError('Issue must have a non-empty string title')
-  }
-
-  if (obj.parent !== null && typeof obj.parent !== 'string') {
-    throw new ValidationError('Issue parent must be null or a string')
-  }
-
-  if (typeof obj.done !== 'boolean') {
-    throw new ValidationError('Issue done must be a boolean')
-  }
-
-  if (obj.doneAt !== null && typeof obj.doneAt !== 'string') {
-    throw new ValidationError('Issue doneAt must be null or a string')
-  }
-
-  if (!Array.isArray(obj.labels)) {
-    throw new ValidationError('Issue labels must be an array')
-  }
-
-  if (!obj.labels.every((l) => typeof l === 'string')) {
-    throw new ValidationError('Issue labels must all be strings')
-  }
-
-  if (typeof obj.context !== 'string') {
-    throw new ValidationError('Issue context must be a string')
-  }
-
-  if (!Array.isArray(obj.criteria)) {
-    throw new ValidationError('Issue criteria must be an array')
-  }
-
-  if (!obj.criteria.every((c) => typeof c === 'string')) {
-    throw new ValidationError('Issue criteria must all be strings')
-  }
-
-  if (!Array.isArray(obj.notes)) {
-    throw new ValidationError('Issue notes must be an array')
-  }
-
-  if (!obj.notes.every((n) => typeof n === 'string')) {
-    throw new ValidationError('Issue notes must all be strings')
+  for (const fieldName of ALL_FIELD_NAMES) {
+    validateField(fieldName, obj[fieldName])
   }
 
   return true

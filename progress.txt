@@ -34,6 +34,26 @@
 - For `--key=value` flags: use `args.find(a => a.startsWith('--key='))?.slice('--key='.length)`
 - When filtering hierarchical data with parent/child: compute child matches first, show parent if it matches OR if any child matches (provides context)
 - When validating parent changes, check both directions: target parent cannot be a child AND issue cannot have children if becoming a child
+- Use `ISSUE_FIELDS` from schema.ts as single source of truth for field definitions (types, defaults, validators)
+- Use `getDefault(fieldName)` from schema.ts to get default values for optional fields
+- Use `UPDATABLE_FIELD_NAMES` from schema.ts for the list of fields that can be changed via update
+- Use `validateField(fieldName, value)` from schema.ts to validate individual fields
+- To avoid circular deps: put ValidationError in separate errors.ts, re-export from validate.ts for backward compat
+
+---
+
+## 2026-01-08 - f6c0d1
+
+- Created `src/schema.ts` as single source of truth for Issue field definitions
+- Created `src/errors.ts` for ValidationError to avoid circular dependencies
+- Refactored new.ts to use `getDefault()` from schema for applying defaults
+- Refactored update.ts to use `UPDATABLE_FIELD_NAMES` from schema for field validation
+- Refactored validate.ts to use `validateField()` from schema instead of inline checks
+- Files changed: `src/schema.ts` (new), `src/errors.ts` (new), `src/validate.ts`, `src/commands/new.ts`, `src/commands/update.ts`
+- **Learnings:**
+  - Circular dependency between schema.ts and validate.ts resolved by extracting ValidationError to errors.ts
+  - Re-export pattern maintains backward compatibility: `export { ValidationError } from './errors.ts'`
+  - `as const satisfies` provides type inference while allowing the schema to be used at runtime
 
 ---
 

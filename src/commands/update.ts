@@ -1,7 +1,6 @@
 import { readIssues, writeIssues, findIssueOrExit, type Issue } from '../store.ts'
-import { validateIssueFields, validateParentRef, ValidationError, parseJsonOrExit } from '../validate.ts'
-
-const UPDATABLE_FIELDS = ['title', 'parent', 'done', 'labels', 'context', 'criteria', 'notes']
+import { validateIssueFields, validateParentRef, validateOrExit, ValidationError, parseJsonOrExit } from '../validate.ts'
+import { UPDATABLE_FIELD_NAMES } from '../schema.ts'
 
 function parseUpdateInput(json: string): Partial<Issue> {
   const parsed = JSON.parse(json)
@@ -14,10 +13,11 @@ function parseUpdateInput(json: string): Partial<Issue> {
     throw new ValidationError('Cannot change issue id')
   }
 
-  const unknownFields = Object.keys(parsed).filter((k) => !UPDATABLE_FIELDS.includes(k))
+  const validFields = new Set<string>(UPDATABLE_FIELD_NAMES)
+  const unknownFields = Object.keys(parsed).filter((k) => !validFields.has(k))
   if (unknownFields.length > 0) {
     console.error(
-      `Warning: Unknown field(s): ${unknownFields.join(', ')}. Valid fields: ${UPDATABLE_FIELDS.join(', ')}`
+      `Warning: Unknown field(s): ${unknownFields.join(', ')}. Valid fields: ${UPDATABLE_FIELD_NAMES.join(', ')}`
     )
   }
 
@@ -38,16 +38,10 @@ export async function update(idPrefix: string, jsonArg: string): Promise<void> {
   if ('criteria' in updates) issue.criteria = updates.criteria!
   if ('notes' in updates) issue.notes = updates.notes!
 
-  try {
+  validateOrExit(() => {
     validateIssueFields(issue)
     validateParentRef(issue, store.issues)
-  } catch (err) {
-    if (err instanceof ValidationError) {
-      console.error(err.message)
-      process.exit(1)
-    }
-    throw err
-  }
+  })
 
   await writeIssues(store)
 
