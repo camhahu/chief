@@ -200,3 +200,38 @@ test('chief update warns on unknown fields but still applies valid fields', asyn
   const content = await Bun.file(issuesPath).json()
   expect(content.issues[0].title).toBe('updated')
 })
+
+test('chief update with done: true sets doneAt timestamp', async () => {
+  const createResult = await $`bun run ${CLI} new '{"title":"test"}'`
+    .cwd(testDir)
+    .text()
+  const id = createResult.trim()
+
+  await $`bun run ${CLI} update ${id} '{"done":true}'`.cwd(testDir).quiet()
+
+  const content = await Bun.file(issuesPath).json()
+  const issue = content.issues.find((i: { id: string }) => i.id === id)
+  expect(issue.done).toBe(true)
+  expect(issue.doneAt).toBeString()
+  expect(new Date(issue.doneAt).getTime()).toBeGreaterThan(0)
+})
+
+test('chief update with done: false clears doneAt', async () => {
+  const createResult = await $`bun run ${CLI} new '{"title":"test"}'`
+    .cwd(testDir)
+    .text()
+  const id = createResult.trim()
+
+  await $`bun run ${CLI} done ${id}`.cwd(testDir).quiet()
+
+  let content = await Bun.file(issuesPath).json()
+  let issue = content.issues.find((i: { id: string }) => i.id === id)
+  expect(issue.doneAt).toBeString()
+
+  await $`bun run ${CLI} update ${id} '{"done":false}'`.cwd(testDir).quiet()
+
+  content = await Bun.file(issuesPath).json()
+  issue = content.issues.find((i: { id: string }) => i.id === id)
+  expect(issue.done).toBe(false)
+  expect(issue.doneAt).toBeNull()
+})

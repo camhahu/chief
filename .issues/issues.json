@@ -747,8 +747,8 @@
       "id": "18dba8",
       "title": "update {done: true} should set doneAt timestamp",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-07T23:10:32.351Z",
       "labels": [
         "bug"
       ],

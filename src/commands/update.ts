@@ -32,7 +32,10 @@ export async function update(idPrefix: string, jsonArg: string): Promise<void> {
 
   if ('title' in updates) issue.title = updates.title!
   if ('parent' in updates) issue.parent = updates.parent!
-  if ('done' in updates) issue.done = updates.done!
+  if ('done' in updates) {
+    issue.done = updates.done!
+    issue.doneAt = updates.done ? new Date().toISOString() : null
+  }
   if ('labels' in updates) issue.labels = updates.labels!
   if ('context' in updates) issue.context = updates.context!
   if ('criteria' in updates) issue.criteria = updates.criteria!
