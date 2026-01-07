@@ -5,7 +5,7 @@
 - Always use Bun (never npm, pnpm, yarn, etc.)
 - `bun add <pkg>` for dependencies
 - `bun add -d <pkg>` for dev dependencies
-- Use Bun standard library instead of Node standard library where possible
+- Use Bun standard library instead of Node standard library
 
 ## Commands
 
@@ -23,6 +23,7 @@
 - No unit tests, only integration tests
 - After completing a new feature, manually test it and add integration test coverage
 - When fixing a bug, first add a test case that reproduces the issue, then fix the bug
+- Temporary test files should be created in `.testfiles/` directory (gitignored)
 
 ## Commit Message Format
 
