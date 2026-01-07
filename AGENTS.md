@@ -24,6 +24,7 @@
 - After completing a new feature, manually test it and add integration test coverage
 - When fixing a bug, first add a test case that reproduces the issue, then fix the bug
 - Temporary test files should be created in `.testfiles/` directory (gitignored)
+- NEVER use directories outside the project (e.g., /tmp) - always use `.testfiles/` for manual testing
 
 ## Commit Message Format
 
