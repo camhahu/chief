@@ -1,6 +1,8 @@
 import { readIssues, writeIssues, findIssueOrExit, type Issue } from '../store.ts'
 import { validateIssueFields, validateParentRef, ValidationError } from '../validate.ts'
 
+const UPDATABLE_FIELDS = ['title', 'parent', 'done', 'labels', 'context', 'criteria', 'notes']
+
 function parseUpdateInput(json: string): Partial<Issue> {
   const parsed = JSON.parse(json)
 
@@ -10,6 +12,13 @@ function parseUpdateInput(json: string): Partial<Issue> {
 
   if ('id' in parsed) {
     throw new ValidationError('Cannot change issue id')
+  }
+
+  const unknownFields = Object.keys(parsed).filter((k) => !UPDATABLE_FIELDS.includes(k))
+  if (unknownFields.length > 0) {
+    console.error(
+      `Warning: Unknown field(s): ${unknownFields.join(', ')}. Valid fields: ${UPDATABLE_FIELDS.join(', ')}`
+    )
   }
 
   return parsed as Partial<Issue>

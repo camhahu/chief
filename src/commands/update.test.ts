@@ -118,3 +118,20 @@ test('chief update fails without arguments', async () => {
   expect(result.exitCode).toBe(1)
   expect(result.stderr.toString()).toContain('Usage:')
 })
+
+test('chief update warns on unknown fields but still applies valid fields', async () => {
+  const createResult = await $`bun run ${CLI} new '{"title":"original"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const id = createResult.trim()
+
+  const result = await $`bun run ${CLI} update ${id} '{"title":"updated","typo":"ignored"}'`
+    .cwd(TEST_DIR)
+    .nothrow()
+
+  expect(result.exitCode).toBe(0)
+  expect(result.stderr.toString()).toContain('Warning: Unknown field(s): typo')
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  expect(content.issues[0].title).toBe('updated')
+})

@@ -1,5 +1,7 @@
 # Reusable Patterns
 
+- Define valid fields as a simple array, use `filter` + `!includes` to detect unknown fields
+
 - When verifying PRD tasks, check progress.txt for prior completions - work may have been done as part of another task
 - Use `findIssueOrExit(store, idPrefix)` from store.ts when a command needs to find an issue by ID prefix and exit if not found (supports partial ID matching)
 - Install scripts: use `set -euo pipefail`, detect OS/arch with `uname -s/-m`, prefer curl with wget fallback
@@ -26,6 +28,16 @@
 - For CLI flags: use `args.includes('--flag')` to detect, export filter type from command module for type safety
 - For `--key=value` flags: use `args.find(a => a.startsWith('--key='))?.slice('--key='.length)`
 - When filtering hierarchical data with parent/child: compute child matches first, show parent if it matches OR if any child matches (provides context)
+
+---
+
+## 2026-01-08 - ff6a7b
+
+- Added warning for unknown fields in `chief update` command
+- Files changed: `src/commands/update.ts`, `src/commands/update.test.ts`, `prd.json`
+- **Learnings:**
+  - Print warnings to stderr so they don't interfere with stdout parsing
+  - Warning pattern: detect invalid input, emit warning, continue with valid parts
 
 ---
 
