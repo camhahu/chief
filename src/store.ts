@@ -1,3 +1,5 @@
+export type { Issue, IssuesStore } from './schema.ts'
+
 const ISSUES_DIR = '.issues'
 const ISSUES_FILE = 'issues.json'
 const ISSUES_PATH = `${ISSUES_DIR}/${ISSUES_FILE}`
@@ -9,22 +11,6 @@ function dirname(path: string): string {
   if (lastSlash === -1) return '.'
   if (lastSlash === 0) return '/'
   return path.slice(0, lastSlash)
-}
-
-export interface Issue {
-  id: string
-  title: string
-  parent: string | null
-  done: boolean
-  doneAt: string | null
-  labels: string[]
-  context: string
-  criteria: string[]
-  notes: string[]
-}
-
-export interface IssuesStore {
-  issues: Issue[]
 }
 
 export class IssuesNotFoundError extends Error {
@@ -57,6 +43,8 @@ export async function findIssuesPath(
   }
 }
 
+import type { IssuesStore } from './schema.ts'
+
 export async function readIssues(startDir?: string): Promise<IssuesStore> {
   const path = await findIssuesPath(startDir)
   if (!path) {
@@ -81,6 +69,8 @@ export async function writeIssues(
   const json = `{"issues": [\n${lines.join(',\n')}\n]}\n`
   await Bun.write(path, json)
 }
+
+import type { Issue } from './schema.ts'
 
 export function findIssueOrExit(store: IssuesStore, idPrefix: string, label = 'Issue'): Issue {
   const matches = store.issues.filter((i) => i.id.startsWith(idPrefix))

@@ -1,6 +1,6 @@
-import type { Issue, IssuesStore } from './store'
-import { ALL_FIELD_NAMES, validateField } from './schema.ts'
+import { type Issue, type IssuesStore, IssueSchema } from './schema.ts'
 import { ValidationError } from './errors.ts'
+import { z } from 'zod'
 
 export { ValidationError }
 
@@ -16,6 +16,19 @@ export function validateOrExit(fn: () => void): void {
   }
 }
 
+function formatZodError(error: z.core.$ZodError): string {
+  const issue = error.issues[0]
+  if (!issue) return 'Validation failed'
+
+  const field = issue.path[0]
+
+  if (issue.path.length > 1 && issue.code === 'invalid_type') {
+    return `Issue ${String(field)} must all be strings`
+  }
+
+  return issue.message
+}
+
 export function parseJsonOrExit<T>(json: string, parse: (json: string) => T): T {
   try {
     return parse(json)
@@ -24,6 +37,8 @@ export function parseJsonOrExit<T>(json: string, parse: (json: string) => T): T 
       console.error('Invalid JSON:', err.message)
     } else if (err instanceof ValidationError) {
       console.error(err.message)
+    } else if (err instanceof z.core.$ZodError) {
+      console.error(formatZodError(err))
     } else {
       throw err
     }
@@ -36,10 +51,9 @@ export function validateIssueFields(issue: unknown): issue is Issue {
     throw new ValidationError('Issue must be an object')
   }
 
-  const obj = issue as Record<string, unknown>
-
-  for (const fieldName of ALL_FIELD_NAMES) {
-    validateField(fieldName, obj[fieldName])
+  const result = IssueSchema.safeParse(issue)
+  if (!result.success) {
+    throw new ValidationError(formatZodError(result.error))
   }
 
   return true
@@ -80,24 +94,29 @@ export function validateParentRef(
   }
 }
 
-export function validateStore(store: IssuesStore): void {
-  if (!Array.isArray(store.issues)) {
+export function validateStore(store: unknown): asserts store is IssuesStore {
+  if (typeof store !== 'object' || store === null) {
+    throw new ValidationError('Store must be an object')
+  }
+
+  const obj = store as Record<string, unknown>
+  if (!Array.isArray(obj.issues)) {
     throw new ValidationError('Store must have an issues array')
   }
 
   const seenIds = new Set<string>()
 
-  for (const issue of store.issues) {
+  for (const issue of obj.issues) {
     validateIssueFields(issue)
 
-    if (seenIds.has(issue.id)) {
-      throw new ValidationError(`Duplicate issue id: ${issue.id}`)
+    if (seenIds.has((issue as Issue).id)) {
+      throw new ValidationError(`Duplicate issue id: ${(issue as Issue).id}`)
     }
-    seenIds.add(issue.id)
+    seenIds.add((issue as Issue).id)
   }
 
-  for (const issue of store.issues) {
-    validateParentRef(issue, store.issues)
+  for (const issue of obj.issues as Issue[]) {
+    validateParentRef(issue, obj.issues as Issue[])
   }
 }
 

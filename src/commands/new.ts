@@ -1,20 +1,10 @@
 import { readIssues, writeIssues, resolveParentIdOrExit, type Issue } from '../store.ts'
 import { generateId } from '../id.ts'
-import { validateNewIssue, ValidationError, validateOrExit, parseJsonOrExit } from '../validate.ts'
-import { getDefault } from '../schema.ts'
+import { validateNewIssue, validateOrExit, parseJsonOrExit } from '../validate.ts'
+import { ISSUE_DEFAULTS, NewIssueInputSchema } from '../schema.ts'
 
-function parseInput(json: string): Partial<Issue> {
-  const parsed = JSON.parse(json)
-
-  if (typeof parsed !== 'object' || parsed === null) {
-    throw new ValidationError('Input must be a JSON object')
-  }
-
-  if (typeof parsed.title !== 'string' || parsed.title.length === 0) {
-    throw new ValidationError('Input must have a non-empty title')
-  }
-
-  return parsed as Partial<Issue>
+function parseInput(json: string) {
+  return NewIssueInputSchema.parse(JSON.parse(json))
 }
 
 export async function newIssue(jsonArg: string): Promise<void> {
@@ -23,18 +13,11 @@ export async function newIssue(jsonArg: string): Promise<void> {
   const store = await readIssues()
   const id = generateId(store.issues.map((i) => i.id))
 
-  const parentId = resolveParentIdOrExit(store, input.parent ?? getDefault('parent'))
-
   const issue: Issue = {
+    ...ISSUE_DEFAULTS,
+    ...input,
     id,
-    title: input.title!,
-    parent: parentId,
-    done: input.done ?? getDefault('done'),
-    doneAt: input.doneAt ?? getDefault('doneAt'),
-    labels: input.labels ?? getDefault('labels'),
-    context: input.context ?? getDefault('context'),
-    criteria: input.criteria ?? getDefault('criteria'),
-    notes: input.notes ?? getDefault('notes'),
+    parent: resolveParentIdOrExit(store, input.parent ?? null),
   }
 
   validateOrExit(() => validateNewIssue(issue, store.issues))

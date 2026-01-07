@@ -1,8 +1,9 @@
-import { readIssues, writeIssues, findIssueOrExit, resolveParentIdOrExit, type Issue } from '../store.ts'
-import { validateIssueFields, validateParentRef, validateOrExit, ValidationError, parseJsonOrExit } from '../validate.ts'
-import { UPDATABLE_FIELD_NAMES } from '../schema.ts'
+import { readIssues, writeIssues, findIssueOrExit, resolveParentIdOrExit } from '../store.ts'
+import { validateIssueFields, validateParentRef, validateOrExit, parseJsonOrExit } from '../validate.ts'
+import { UPDATABLE_FIELD_NAMES, UpdateIssueInputSchema } from '../schema.ts'
+import { ValidationError } from '../errors.ts'
 
-function parseUpdateInput(json: string): Partial<Issue> {
+function parseUpdateInput(json: string) {
   const parsed = JSON.parse(json)
 
   if (typeof parsed !== 'object' || parsed === null) {
@@ -21,7 +22,7 @@ function parseUpdateInput(json: string): Partial<Issue> {
     )
   }
 
-  return parsed as Partial<Issue>
+  return UpdateIssueInputSchema.parse(parsed)
 }
 
 export async function update(idPrefix: string, jsonArg: string): Promise<void> {
@@ -30,16 +31,16 @@ export async function update(idPrefix: string, jsonArg: string): Promise<void> {
   const store = await readIssues()
   const issue = findIssueOrExit(store, idPrefix)
 
-  if ('title' in updates) issue.title = updates.title!
-  if ('parent' in updates) issue.parent = resolveParentIdOrExit(store, updates.parent!)
-  if ('done' in updates) {
-    issue.done = updates.done!
+  if (updates.title !== undefined) issue.title = updates.title
+  if (updates.parent !== undefined) issue.parent = resolveParentIdOrExit(store, updates.parent)
+  if (updates.done !== undefined) {
+    issue.done = updates.done
     issue.doneAt = updates.done ? new Date().toISOString() : null
   }
-  if ('labels' in updates) issue.labels = updates.labels!
-  if ('context' in updates) issue.context = updates.context!
-  if ('criteria' in updates) issue.criteria = updates.criteria!
-  if ('notes' in updates) issue.notes = updates.notes!
+  if (updates.labels !== undefined) issue.labels = updates.labels
+  if (updates.context !== undefined) issue.context = updates.context
+  if (updates.criteria !== undefined) issue.criteria = updates.criteria
+  if (updates.notes !== undefined) issue.notes = updates.notes
 
   validateOrExit(() => {
     validateIssueFields(issue)

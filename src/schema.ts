@@ -1,64 +1,73 @@
-import { ValidationError } from './errors.ts'
+import { z } from 'zod'
 
-function validateNonEmptyString(value: unknown, fieldName: string): void {
-  if (typeof value !== 'string' || value.length === 0) {
-    throw new ValidationError(`Issue must have a non-empty string ${fieldName}`)
-  }
-}
+const nullableString = (fieldName: string) =>
+  z.union([z.string(), z.null()], { error: `Issue ${fieldName} must be null or a string` })
 
-function validateNullableString(value: unknown, fieldName: string): void {
-  if (value !== null && typeof value !== 'string') {
-    throw new ValidationError(`Issue ${fieldName} must be null or a string`)
-  }
-}
+export const IssueSchema = z.object({
+  id: z
+    .string({ error: 'Issue must have a non-empty string id' })
+    .min(1, 'Issue must have a non-empty string id'),
+  title: z
+    .string({ error: 'Issue must have a non-empty string title' })
+    .min(1, 'Issue must have a non-empty string title'),
+  parent: nullableString('parent'),
+  done: z.boolean({ error: 'Issue done must be a boolean' }),
+  doneAt: nullableString('doneAt'),
+  labels: z.array(z.string(), { error: 'Issue labels must be an array' }),
+  context: z.string({ error: 'Issue context must be a string' }),
+  criteria: z.array(z.string(), { error: 'Issue criteria must be an array' }),
+  notes: z.array(z.string(), { error: 'Issue notes must be an array' }),
+})
 
-function validateBoolean(value: unknown, fieldName: string): void {
-  if (typeof value !== 'boolean') {
-    throw new ValidationError(`Issue ${fieldName} must be a boolean`)
-  }
-}
+export type Issue = z.infer<typeof IssueSchema>
 
-function validateString(value: unknown, fieldName: string): void {
-  if (typeof value !== 'string') {
-    throw new ValidationError(`Issue ${fieldName} must be a string`)
-  }
-}
+export const IssuesStoreSchema = z.object({
+  issues: z.array(IssueSchema),
+})
 
-function validateStringArray(value: unknown, fieldName: string): void {
-  if (!Array.isArray(value)) {
-    throw new ValidationError(`Issue ${fieldName} must be an array`)
-  }
-  if (!value.every((item) => typeof item === 'string')) {
-    throw new ValidationError(`Issue ${fieldName} must all be strings`)
-  }
-}
+export type IssuesStore = z.infer<typeof IssuesStoreSchema>
 
-export const ISSUE_FIELDS = {
-  id: { default: '', validate: validateNonEmptyString },
-  title: { default: '', validate: validateNonEmptyString },
-  parent: { default: null as string | null, validate: validateNullableString },
-  done: { default: false, validate: validateBoolean },
-  doneAt: { default: null as string | null, validate: validateNullableString },
-  labels: { default: [] as string[], validate: validateStringArray },
-  context: { default: '', validate: validateString },
-  criteria: { default: [] as string[], validate: validateStringArray },
-  notes: { default: [] as string[], validate: validateStringArray },
-}
+export const NewIssueInputSchema = z.object({
+  title: z.string({ error: 'Input must have a non-empty title' }).min(1, 'Input must have a non-empty title'),
+  parent: z.string().nullable().optional(),
+  done: z.boolean().optional(),
+  doneAt: z.string().nullable().optional(),
+  labels: z.array(z.string()).optional(),
+  context: z.string().optional(),
+  criteria: z.array(z.string()).optional(),
+  notes: z.array(z.string()).optional(),
+})
 
-export type IssueFieldName = keyof typeof ISSUE_FIELDS
+export type NewIssueInput = z.infer<typeof NewIssueInputSchema>
 
-export const ALL_FIELD_NAMES = Object.keys(ISSUE_FIELDS) as IssueFieldName[]
+export const UpdateIssueInputSchema = z.object({
+  title: z.string().min(1, 'Issue must have a non-empty string title').optional(),
+  parent: z.string().nullable().optional(),
+  done: z.boolean().optional(),
+  labels: z.array(z.string()).optional(),
+  context: z.string().optional(),
+  criteria: z.array(z.string()).optional(),
+  notes: z.array(z.string()).optional(),
+})
 
-export const UPDATABLE_FIELD_NAMES = ALL_FIELD_NAMES.filter(
-  (name) => name !== 'id' && name !== 'doneAt'
-)
+export type UpdateIssueInput = z.infer<typeof UpdateIssueInputSchema>
 
-export function getDefault<K extends IssueFieldName>(
-  field: K
-): (typeof ISSUE_FIELDS)[K]['default'] {
-  return ISSUE_FIELDS[field].default
-}
+export const ISSUE_DEFAULTS = {
+  parent: null,
+  done: false,
+  doneAt: null,
+  labels: [],
+  context: '',
+  criteria: [],
+  notes: [],
+} satisfies Omit<Issue, 'id' | 'title'>
 
-export function validateField(fieldName: IssueFieldName, value: unknown): void {
-  ISSUE_FIELDS[fieldName].validate(value, fieldName)
-}
+export const UPDATABLE_FIELD_NAMES = [
+  'title',
+  'parent',
+  'done',
+  'labels',
+  'context',
+  'criteria',
+  'notes',
+] as const

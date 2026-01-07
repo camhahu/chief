@@ -48,6 +48,28 @@
 - Use `Bun.write()` instead of `mkdir` + write - it creates parent directories automatically
 - Implement `dirname()` locally: find last `/`, handle edge cases for root and no-slash paths
 
+- Use `z.infer<typeof Schema>` to derive TypeScript types from Zod schemas
+- For Zod 4: use `z.core.$ZodError` type for error handling (not `z.ZodError`)
+- Format Zod errors by extracting `error.issues[0]` and mapping path/code to user-friendly messages
+
+---
+
+## 2026-01-08 - 62e47a
+
+- Replaced manual validation in schema.ts with Zod schemas
+- Added Zod (v4) dependency
+- Created IssueSchema, NewIssueInputSchema, UpdateIssueInputSchema
+- Types now inferred from schemas via `z.infer<>`
+- Updated validate.ts to use Zod safeParse with custom error formatting
+- Updated new.ts and update.ts to use Zod for input parsing
+- Moved Issue/IssuesStore types to schema.ts, re-exported from store.ts
+- Files changed: `src/schema.ts`, `src/validate.ts`, `src/store.ts`, `src/commands/new.ts`, `src/commands/update.ts`, `package.json`, `bun.lock`
+- **Learnings:**
+  - Zod 4 error types are in `z.core.$ZodError` namespace
+  - Custom error messages require formatting logic to match existing error message patterns
+  - safeParse returns `{ success, data }` or `{ success, error }` - use for validation without throwing
+  - Move type re-exports to maintain backward compatibility when consolidating types
+
 ---
 
 ## 2026-01-08 - 953632
