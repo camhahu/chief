@@ -1,31 +1,18 @@
-import { expect, test, beforeEach, afterEach } from 'bun:test'
-import { join } from 'node:path'
+import { expect, test } from 'bun:test'
 import { $ } from 'bun'
+import { CLI, setupTestDir } from '../test-helpers.ts'
 
-const PROJECT_ROOT = join(import.meta.dir, '..', '..')
-const TEST_DIR = join(PROJECT_ROOT, '.testfiles', 'new-test')
-const CLI = join(PROJECT_ROOT, 'src', 'index.ts')
-const ISSUES_PATH = join(TEST_DIR, '.issues', 'issues.json')
-
-beforeEach(async () => {
-  await $`rm -rf ${TEST_DIR}`.quiet()
-  await $`mkdir -p ${TEST_DIR}`.quiet()
-  await $`bun run ${CLI} init`.cwd(TEST_DIR).quiet()
-})
-
-afterEach(async () => {
-  await $`rm -rf ${TEST_DIR}`.quiet()
-})
+const { testDir, issuesPath } = setupTestDir('new-test')
 
 test('chief new creates issue with minimal JSON', async () => {
   const result = await $`bun run ${CLI} new '{"title":"test issue"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
 
   const id = result.trim()
   expect(id).toMatch(/^[0-9a-f]{6}$/)
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   expect(content.issues).toHaveLength(1)
   expect(content.issues[0]).toEqual({
     id,
@@ -49,10 +36,10 @@ test('chief new applies user-provided fields', async () => {
     notes: ['note 1'],
   })
 
-  const result = await $`bun run ${CLI} new ${input}`.cwd(TEST_DIR).text()
+  const result = await $`bun run ${CLI} new ${input}`.cwd(testDir).text()
 
   const id = result.trim()
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   expect(content.issues[0]).toEqual({
     id,
     title: 'custom issue',
@@ -68,7 +55,7 @@ test('chief new applies user-provided fields', async () => {
 
 test('chief new validates parent reference', async () => {
   const result = await $`bun run ${CLI} new '{"title":"child","parent":"nonexistent"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -76,11 +63,11 @@ test('chief new validates parent reference', async () => {
 })
 
 test('chief new generates unique IDs', async () => {
-  await $`bun run ${CLI} new '{"title":"first"}'`.cwd(TEST_DIR).quiet()
-  await $`bun run ${CLI} new '{"title":"second"}'`.cwd(TEST_DIR).quiet()
-  await $`bun run ${CLI} new '{"title":"third"}'`.cwd(TEST_DIR).quiet()
+  await $`bun run ${CLI} new '{"title":"first"}'`.cwd(testDir).quiet()
+  await $`bun run ${CLI} new '{"title":"second"}'`.cwd(testDir).quiet()
+  await $`bun run ${CLI} new '{"title":"third"}'`.cwd(testDir).quiet()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const ids = content.issues.map((i: { id: string }) => i.id)
   const uniqueIds = new Set(ids)
   expect(uniqueIds.size).toBe(3)
@@ -88,7 +75,7 @@ test('chief new generates unique IDs', async () => {
 
 test('chief new fails with invalid JSON', async () => {
   const result = await $`bun run ${CLI} new 'not json'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -97,7 +84,7 @@ test('chief new fails with invalid JSON', async () => {
 
 test('chief new fails without title', async () => {
   const result = await $`bun run ${CLI} new '{"labels":["bug"]}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -106,36 +93,36 @@ test('chief new fails without title', async () => {
 
 test('chief new can create child issue with valid parent', async () => {
   const parentResult = await $`bun run ${CLI} new '{"title":"parent"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const parentId = parentResult.trim()
 
   const childResult =
     await $`bun run ${CLI} new ${JSON.stringify({ title: 'child', parent: parentId })}`
-      .cwd(TEST_DIR)
+      .cwd(testDir)
       .text()
   const childId = childResult.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const child = content.issues.find((i: { id: string }) => i.id === childId)
   expect(child.parent).toBe(parentId)
 })
 
 test('chief new rejects nested children (max 1 level)', async () => {
   const parentResult = await $`bun run ${CLI} new '{"title":"parent"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const parentId = parentResult.trim()
 
   const childResult =
     await $`bun run ${CLI} new ${JSON.stringify({ title: 'child', parent: parentId })}`
-      .cwd(TEST_DIR)
+      .cwd(testDir)
       .text()
   const childId = childResult.trim()
 
   const grandchildResult =
     await $`bun run ${CLI} new ${JSON.stringify({ title: 'grandchild', parent: childId })}`
-      .cwd(TEST_DIR)
+      .cwd(testDir)
       .nothrow()
 
   expect(grandchildResult.exitCode).toBe(1)

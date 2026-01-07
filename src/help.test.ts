@@ -1,9 +1,6 @@
 import { expect, test } from 'bun:test'
-import { join } from 'node:path'
 import { $ } from 'bun'
-
-const PROJECT_ROOT = join(import.meta.dir, '..')
-const CLI = join(PROJECT_ROOT, 'src', 'index.ts')
+import { CLI } from './test-helpers.ts'
 
 test('chief --help lists all commands with descriptions', async () => {
   const result = await $`bun run ${CLI} --help`.text()

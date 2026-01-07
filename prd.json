@@ -480,8 +480,8 @@
       "id": "e5bfc0",
       "title": "Extract test setup helpers",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["refactor"],
       "context": "Every test file has identical boilerplate: PROJECT_ROOT, TEST_DIR, CLI, ISSUES_PATH constants, beforeEach/afterEach for directory setup/teardown. 13 test files all duplicating this.",
       "criteria": [

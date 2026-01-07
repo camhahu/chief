@@ -1,5 +1,7 @@
 # Reusable Patterns
 
+- Use `setupTestDir(name, options)` from test-helpers.ts for test setup/teardown - returns `{ testDir, issuesPath }` and handles beforeEach/afterEach
+- Options: `{ init: true }` (default) runs `chief init`, `{ init: false }` creates empty dir, `{ createIssuesDir: true }` creates `.issues/issues.json` without CLI
 - Use `parseJsonOrExit(json, parseFn)` from validate.ts for JSON input commands - handles SyntaxError and ValidationError uniformly
 - Command registry pattern: define `{ usage, description, handler }` per command in single file, derive help text and routing from it
 - Use `arg(args, index, usage)` helper that checks for undefined and exits with usage message - provides type narrowing
@@ -32,6 +34,18 @@
 - For `--key=value` flags: use `args.find(a => a.startsWith('--key='))?.slice('--key='.length)`
 - When filtering hierarchical data with parent/child: compute child matches first, show parent if it matches OR if any child matches (provides context)
 - When validating parent changes, check both directions: target parent cannot be a child AND issue cannot have children if becoming a child
+
+---
+
+## 2026-01-08 - e5bfc0
+
+- Created `src/test-helpers.ts` with shared test setup/teardown
+- Refactored all 10 test files that had CLI test boilerplate to use the helper
+- Files changed: `src/test-helpers.ts` (new), all `*.test.ts` files in commands/, `src/store.test.ts`, `src/help.test.ts`
+- **Learnings:**
+  - Test files that don't use CLI (id.test.ts, validate.test.ts) don't need the helper
+  - Different setup patterns: `{ init: true }` for most tests, `{ init: false }` for init.test.ts, `{ createIssuesDir: true }` for store.test.ts
+  - `setupTestDir` registers beforeEach/afterEach at module load time - must be called at top level, not inside test()
 
 ---
 

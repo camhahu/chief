@@ -1,54 +1,42 @@
-import { expect, test, beforeEach, afterEach } from 'bun:test'
+import { expect, test } from 'bun:test'
 import { join } from 'node:path'
 import { $ } from 'bun'
+import { CLI, PROJECT_ROOT, setupTestDir } from '../test-helpers.ts'
 
-const PROJECT_ROOT = join(import.meta.dir, '..', '..')
-const TEST_DIR = join(PROJECT_ROOT, '.testfiles', 'list-test')
-const CLI = join(PROJECT_ROOT, 'src', 'index.ts')
-const ISSUES_PATH = join(TEST_DIR, '.issues', 'issues.json')
-
-beforeEach(async () => {
-  await $`rm -rf ${TEST_DIR}`.quiet()
-  await $`mkdir -p ${TEST_DIR}`.quiet()
-  await $`bun run ${CLI} init`.cwd(TEST_DIR).quiet()
-})
-
-afterEach(async () => {
-  await $`rm -rf ${TEST_DIR}`.quiet()
-})
+const { testDir, issuesPath } = setupTestDir('list-test')
 
 test('chief list shows "No issues" when empty', async () => {
-  const result = await $`bun run ${CLI} list`.cwd(TEST_DIR).text()
+  const result = await $`bun run ${CLI} list`.cwd(testDir).text()
   expect(result.trim()).toBe('No issues')
 })
 
 test('chief list shows issue with ID, title, and done status', async () => {
-  await $`bun run ${CLI} new '{"title":"Test issue"}'`.cwd(TEST_DIR).quiet()
+  await $`bun run ${CLI} new '{"title":"Test issue"}'`.cwd(testDir).quiet()
 
-  const result = await $`bun run ${CLI} list`.cwd(TEST_DIR).text()
+  const result = await $`bun run ${CLI} list`.cwd(testDir).text()
   expect(result).toMatch(/^[0-9a-f]{6} \[ \] Test issue\s*$/)
 })
 
 test('chief list shows labels inline', async () => {
   await $`bun run ${CLI} new '{"title":"Bug fix","labels":["bug","urgent"]}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
 
-  const result = await $`bun run ${CLI} list`.cwd(TEST_DIR).text()
+  const result = await $`bun run ${CLI} list`.cwd(testDir).text()
   expect(result).toContain('[bug, urgent]')
 })
 
 test('chief list indents children under parents', async () => {
   const parentResult = await $`bun run ${CLI} new '{"title":"Parent task"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const parentId = parentResult.trim()
 
   await $`bun run ${CLI} new ${JSON.stringify({ title: 'Child task', parent: parentId })}`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
 
-  const result = await $`bun run ${CLI} list`.cwd(TEST_DIR).text()
+  const result = await $`bun run ${CLI} list`.cwd(testDir).text()
   const lines = result.trim().split('\n')
   expect(lines).toHaveLength(2)
   expect(lines[0]).toMatch(/^[0-9a-f]{6} \[ \] Parent task$/)
@@ -57,15 +45,15 @@ test('chief list indents children under parents', async () => {
 
 test('chief list distinguishes done issues', async () => {
   const result = await $`bun run ${CLI} new '{"title":"Done task"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const id = result.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   content.issues[0].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list --all`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list --all`.cwd(testDir).text()
   expect(listResult).toContain('[x]')
   expect(listResult).toContain(id)
 })
@@ -84,42 +72,42 @@ test('chief list fails without .issues directory', async () => {
 })
 
 test('chief list --open shows only open issues', async () => {
-  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(testDir).quiet()
   const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const doneId = doneResult.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
   content.issues[idx].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list --open`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list --open`.cwd(testDir).text()
   expect(listResult).toContain('Open task')
   expect(listResult).not.toContain('Done task')
 })
 
 test('chief list --done shows only done issues', async () => {
-  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(testDir).quiet()
   const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const doneId = doneResult.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
   content.issues[idx].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list --done`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list --done`.cwd(testDir).text()
   expect(listResult).toContain('Done task')
   expect(listResult).not.toContain('Open task')
 })
 
 test('chief list --open and --done are mutually exclusive', async () => {
   const result = await $`bun run ${CLI} list --open --done`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .nothrow()
 
   expect(result.exitCode).toBe(1)
@@ -128,41 +116,41 @@ test('chief list --open and --done are mutually exclusive', async () => {
 
 test('chief list --open shows "No issues" when all are done', async () => {
   const result = await $`bun run ${CLI} new '{"title":"Done task"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const id = result.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   content.issues[0].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list --open`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list --open`.cwd(testDir).text()
   expect(listResult.trim()).toBe('No issues')
 })
 
 test('chief list --open filters children when parent matches', async () => {
   const parentResult = await $`bun run ${CLI} new '{"title":"Open parent"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const parentId = parentResult.trim()
 
   await $`bun run ${CLI} new ${JSON.stringify({ title: 'Open child', parent: parentId })}`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
   const doneChildResult =
     await $`bun run ${CLI} new ${JSON.stringify({ title: 'Done child', parent: parentId })}`
-      .cwd(TEST_DIR)
+      .cwd(testDir)
       .text()
   const doneChildId = doneChildResult.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const idx = content.issues.findIndex(
     (i: { id: string }) => i.id === doneChildId
   )
   content.issues[idx].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list --open`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list --open`.cwd(testDir).text()
   expect(listResult).toContain('Open parent')
   expect(listResult).toContain('Open child')
   expect(listResult).not.toContain('Done child')
@@ -170,15 +158,15 @@ test('chief list --open filters children when parent matches', async () => {
 
 test('chief list --label=bug shows only issues with bug label', async () => {
   await $`bun run ${CLI} new '{"title":"Bug issue","labels":["bug"]}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
   await $`bun run ${CLI} new '{"title":"Feature issue","labels":["feature"]}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
-  await $`bun run ${CLI} new '{"title":"No label issue"}'`.cwd(TEST_DIR).quiet()
+  await $`bun run ${CLI} new '{"title":"No label issue"}'`.cwd(testDir).quiet()
 
   const listResult = await $`bun run ${CLI} list --label=bug`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   expect(listResult).toContain('Bug issue')
   expect(listResult).not.toContain('Feature issue')
@@ -187,26 +175,26 @@ test('chief list --label=bug shows only issues with bug label', async () => {
 
 test('chief list --label combines with --open', async () => {
   await $`bun run ${CLI} new '{"title":"Open bug","labels":["bug"]}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
   const doneBugResult =
     await $`bun run ${CLI} new '{"title":"Done bug","labels":["bug"]}'`
-      .cwd(TEST_DIR)
+      .cwd(testDir)
       .text()
   const doneBugId = doneBugResult.trim()
   await $`bun run ${CLI} new '{"title":"Open feature","labels":["feature"]}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const idx = content.issues.findIndex(
     (i: { id: string }) => i.id === doneBugId
   )
   content.issues[idx].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
   const listResult = await $`bun run ${CLI} list --label=bug --open`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   expect(listResult).toContain('Open bug')
   expect(listResult).not.toContain('Done bug')
@@ -216,16 +204,16 @@ test('chief list --label combines with --open', async () => {
 test('chief list --label shows parent if child matches', async () => {
   const parentResult =
     await $`bun run ${CLI} new '{"title":"Parent without label"}'`
-      .cwd(TEST_DIR)
+      .cwd(testDir)
       .text()
   const parentId = parentResult.trim()
 
   await $`bun run ${CLI} new ${JSON.stringify({ title: 'Child with bug label', parent: parentId, labels: ['bug'] })}`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
 
   const listResult = await $`bun run ${CLI} list --label=bug`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   expect(listResult).toContain('Parent without label')
   expect(listResult).toContain('Child with bug label')
@@ -233,45 +221,45 @@ test('chief list --label shows parent if child matches', async () => {
 
 test('chief list --label shows "No issues" when no matches', async () => {
   await $`bun run ${CLI} new '{"title":"Feature issue","labels":["feature"]}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .quiet()
 
   const listResult = await $`bun run ${CLI} list --label=bug`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   expect(listResult.trim()).toBe('No issues')
 })
 
 test('chief list hides done issues by default', async () => {
-  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(testDir).quiet()
   const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const doneId = doneResult.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
   content.issues[idx].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list`.cwd(testDir).text()
   expect(listResult).toContain('Open task')
   expect(listResult).not.toContain('Done task')
 })
 
 test('chief list --all shows both open and done issues', async () => {
-  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(testDir).quiet()
   const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
-    .cwd(TEST_DIR)
+    .cwd(testDir)
     .text()
   const doneId = doneResult.trim()
 
-  const content = await Bun.file(ISSUES_PATH).json()
+  const content = await Bun.file(issuesPath).json()
   const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
   content.issues[idx].done = true
-  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+  await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list --all`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list --all`.cwd(testDir).text()
   expect(listResult).toContain('Open task')
   expect(listResult).toContain('Done task')
 })

@@ -1,6 +1,7 @@
-import { expect, test, beforeEach, afterEach } from 'bun:test'
+import { expect, test } from 'bun:test'
 import { join } from 'node:path'
 import { $ } from 'bun'
+import { setupTestDir } from './test-helpers.ts'
 import {
   findIssuesPath,
   readIssues,
@@ -10,49 +11,39 @@ import {
   type IssuesStore,
 } from './store.ts'
 
-const TEST_DIR = join(import.meta.dir, '..', '.testfiles', 'store-test')
-
-beforeEach(async () => {
-  await $`rm -rf ${TEST_DIR}`.quiet()
-  await $`mkdir -p ${join(TEST_DIR, '.issues')}`.quiet()
-  await Bun.write(join(TEST_DIR, '.issues', 'issues.json'), '{"issues":[]}\n')
-})
-
-afterEach(async () => {
-  await $`rm -rf ${TEST_DIR}`.quiet()
-})
+const { testDir, issuesPath } = setupTestDir('store-test', { createIssuesDir: true })
 
 test('findIssuesPath returns path when found in current dir', async () => {
-  const path = await findIssuesPath(TEST_DIR)
-  expect(path).toBe(join(TEST_DIR, '.issues', 'issues.json'))
+  const path = await findIssuesPath(testDir)
+  expect(path).toBe(issuesPath)
 })
 
 test('findIssuesPath walks up directory tree', async () => {
-  const nestedDir = join(TEST_DIR, 'a', 'b', 'c')
+  const nestedDir = join(testDir, 'a', 'b', 'c')
   await $`mkdir -p ${nestedDir}`.quiet()
 
   const path = await findIssuesPath(nestedDir)
-  expect(path).toBe(join(TEST_DIR, '.issues', 'issues.json'))
+  expect(path).toBe(issuesPath)
 })
 
 test('findIssuesPath returns null when not found', async () => {
-  const emptyDir = join(TEST_DIR, 'empty')
+  const emptyDir = join(testDir, 'empty')
   await $`mkdir -p ${emptyDir}`.quiet()
-  await $`rm -rf ${join(TEST_DIR, '.issues')}`.quiet()
+  await $`rm -rf ${join(testDir, '.issues')}`.quiet()
 
   const path = await findIssuesPath(emptyDir)
   expect(path).toBeNull()
 })
 
 test('readIssues parses JSON correctly', async () => {
-  const store = await readIssues(TEST_DIR)
+  const store = await readIssues(testDir)
   expect(store).toEqual({ issues: [] })
 })
 
 test('readIssues throws IssuesNotFoundError when file missing', async () => {
-  await $`rm -rf ${join(TEST_DIR, '.issues')}`.quiet()
+  await $`rm -rf ${join(testDir, '.issues')}`.quiet()
 
-  expect(readIssues(TEST_DIR)).rejects.toBeInstanceOf(IssuesNotFoundError)
+  expect(readIssues(testDir)).rejects.toBeInstanceOf(IssuesNotFoundError)
 })
 
 test('writeIssues saves with 2-space indent and trailing newline', async () => {
@@ -72,11 +63,9 @@ test('writeIssues saves with 2-space indent and trailing newline', async () => {
     ],
   }
 
-  await writeIssues(store, TEST_DIR)
+  await writeIssues(store, testDir)
 
-  const content = await Bun.file(
-    join(TEST_DIR, '.issues', 'issues.json')
-  ).text()
+  const content = await Bun.file(issuesPath).text()
 
   expect(content).toContain('  "issues"')
   expect(content).toContain('    {')
@@ -85,9 +74,9 @@ test('writeIssues saves with 2-space indent and trailing newline', async () => {
 })
 
 test('writeIssues throws IssuesNotFoundError when file missing', async () => {
-  await $`rm -rf ${join(TEST_DIR, '.issues')}`.quiet()
+  await $`rm -rf ${join(testDir, '.issues')}`.quiet()
 
-  expect(writeIssues({ issues: [] }, TEST_DIR)).rejects.toBeInstanceOf(
+  expect(writeIssues({ issues: [] }, testDir)).rejects.toBeInstanceOf(
     IssuesNotFoundError
   )
 })
