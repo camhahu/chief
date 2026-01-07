@@ -92,15 +92,14 @@
       "id": "f6a7b8",
       "title": "chief new",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Core command for creating issues. Accepts JSON, applies defaults, generates ID.",
       "criteria": [
         "chief new '{\"title\":\"foo\"}' creates issue and prints ID",
-        "chief new with no args prompts for title, opens $EDITOR",
         "Created issue appears in chief list output"
       ],
-      "notes": []
+      "notes": ["2026-01-07: Interactive mode cancelled - agent-first design"]
     },
     {
       "id": "c9d0e1",
@@ -119,22 +118,7 @@
       ],
       "notes": []
     },
-    {
-      "id": "a2b3c4",
-      "title": "chief new interactive mode",
-      "parent": "f6a7b8",
-      "done": false,
-      "labels": ["feature"],
-      "context": "When no argument provided, prompt for title then open $EDITOR for full JSON.",
-      "criteria": [
-        "Prompts for title if no argument",
-        "Creates template JSON with title filled in",
-        "Opens $EDITOR with template",
-        "Parses result and creates issue",
-        "Handles editor cancellation gracefully"
-      ],
-      "notes": []
-    },
+
     {
       "id": "d5e6f7",
       "title": "chief done",
@@ -183,21 +167,20 @@
       "id": "f4a5b6",
       "title": "chief note",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Append timestamped notes to an issue.",
       "criteria": [
         "chief note <id> 'text' appends timestamped note",
-        "chief note <id> with no text opens $EDITOR",
         "Note appears in chief show <id> output with date prefix"
       ],
-      "notes": []
+      "notes": ["2026-01-07: Interactive mode cancelled - agent-first design"]
     },
     {
       "id": "c7d8e9",
       "title": "chief note with text argument",
       "parent": "f4a5b6",
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "chief note <id> \"text\" - append timestamped note inline.",
       "criteria": [
@@ -208,21 +191,7 @@
       ],
       "notes": []
     },
-    {
-      "id": "a0b1c2",
-      "title": "chief note interactive mode",
-      "parent": "f4a5b6",
-      "done": false,
-      "labels": ["feature"],
-      "context": "chief note <id> with no text opens $EDITOR for longer notes.",
-      "criteria": [
-        "Opens $EDITOR if no text argument",
-        "Prepends date to result",
-        "Appends to notes array",
-        "Handles empty/cancelled editor gracefully"
-      ],
-      "notes": []
-    },
+
     {
       "id": "d3e4f5",
       "title": "chief criteria",
@@ -252,21 +221,7 @@
       ],
       "notes": []
     },
-    {
-      "id": "e9f0a1",
-      "title": "chief edit",
-      "parent": null,
-      "done": false,
-      "labels": ["feature"],
-      "context": "Open a single issue in $EDITOR for full editing.",
-      "criteria": [
-        "chief edit <id> opens issue JSON in $EDITOR",
-        "Saving valid JSON updates the issue",
-        "Saving invalid JSON re-opens editor with error message",
-        "Changing ID in editor is rejected"
-      ],
-      "notes": []
-    },
+
     {
       "id": "g1h2i3",
       "title": "chief list",

@@ -7,6 +7,7 @@ import { done } from './commands/done.ts'
 import { reopen } from './commands/reopen.ts'
 import { remove } from './commands/remove.ts'
 import { show } from './commands/show.ts'
+import { note } from './commands/note.ts'
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -91,6 +92,14 @@ switch (command) {
       await show(args[1])
     } else {
       console.error('Usage: chief show <id>')
+      process.exit(1)
+    }
+    break
+  case 'note':
+    if (args[1] && args[2]) {
+      await note(args[1], args[2])
+    } else {
+      console.error('Usage: chief note <id> <text>')
       process.exit(1)
     }
     break

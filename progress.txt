@@ -10,6 +10,17 @@
 - Parse JSON input with try/catch, check for SyntaxError to distinguish parse errors from validation errors
 - Use nullish coalescing (`??`) for applying defaults to optional fields
 - ANSI escape codes: `\x1b[2m` for dim, `\x1b[32m` for green, `\x1b[0m` to reset
+- Date formatting: `String(n).padStart(2, '0')` for zero-padded numbers
+
+---
+
+## 2026-01-07 - c7d8e9
+
+- Implemented `chief note` command with text argument in `src/commands/note.ts`
+- Files changed: `src/commands/note.ts`, `src/commands/note.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Mutation commands that append to arrays: find by ID -> push to array -> write
+  - Date formatting in YYYY-MM-DD: extract year/month/day, pad month/day with leading zeros
 
 ---
 
