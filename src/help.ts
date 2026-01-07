@@ -1,41 +1,4 @@
-const commands: Record<string, { usage: string; description: string }> = {
-  init: {
-    usage: 'chief init',
-    description: 'Initialize a new .issues directory',
-  },
-  new: {
-    usage: "chief new '{\"title\": \"...\"}'",
-    description: 'Create a new issue from JSON',
-  },
-  done: {
-    usage: 'chief done <id>',
-    description: 'Mark an issue as done',
-  },
-  reopen: {
-    usage: 'chief reopen <id>',
-    description: 'Reopen a completed issue',
-  },
-  remove: {
-    usage: 'chief remove <id>',
-    description: 'Remove an issue and its children',
-  },
-  note: {
-    usage: 'chief note <id> <text>',
-    description: 'Add a note to an issue',
-  },
-  list: {
-    usage: 'chief list [--all | --open | --done] [--label=<name>]',
-    description: 'List open issues (use --all for all)',
-  },
-  show: {
-    usage: 'chief show <id>',
-    description: 'Show full details of an issue',
-  },
-  update: {
-    usage: "chief update <id> '{\"field\": \"value\"}'",
-    description: 'Update fields on an existing issue',
-  },
-}
+import { commands } from './commands.ts'
 
 export function printMainHelp(): void {
   console.log(`chief - A simple issue tracker

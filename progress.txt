@@ -1,5 +1,7 @@
 # Reusable Patterns
 
+- Command registry pattern: define `{ usage, description, handler }` per command in single file, derive help text and routing from it
+- Use `arg(args, index, usage)` helper that checks for undefined and exits with usage message - provides type narrowing
 - Define valid fields as a simple array, use `filter` + `!includes` to detect unknown fields
 
 - When verifying PRD tasks, check progress.txt for prior completions - work may have been done as part of another task
@@ -29,6 +31,20 @@
 - For `--key=value` flags: use `args.find(a => a.startsWith('--key='))?.slice('--key='.length)`
 - When filtering hierarchical data with parent/child: compute child matches first, show parent if it matches OR if any child matches (provides context)
 - When validating parent changes, check both directions: target parent cannot be a child AND issue cannot have children if becoming a child
+
+---
+
+## 2026-01-08 - c39dae
+
+- Extracted command routing into `src/commands.ts` registry
+- Commands now defined once with usage, description, and handler
+- index.ts reduced from 110 lines to 26 lines
+- help.ts now imports from commands.ts instead of duplicating definitions
+- Files changed: `src/commands.ts` (new), `src/index.ts`, `src/help.ts`, `prd.json`
+- **Learnings:**
+  - Use `arg(args, index, usage)` helper for type-safe argument extraction with exit on missing
+  - Complex flag handling (like `list`) can still live in handler, just part of registry
+  - TypeScript doesn't narrow array indexing by length checks; use explicit undefined check
 
 ---
 

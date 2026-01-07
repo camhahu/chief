@@ -450,8 +450,8 @@
       "id": "c39dae",
       "title": "Extract command routing table in index.ts",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["refactor"],
       "context": "index.ts has a large switch statement with duplicated patterns: check args, call function, else print usage. Adding new commands requires changes in 3 places (import, switch case, help.ts).",
       "criteria": [
