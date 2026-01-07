@@ -525,8 +525,8 @@
       "id": "b8e2f3",
       "title": "Use consistent error output pattern",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["refactor"],
       "context": "Some commands use findIssueOrExit, others do manual find + console.error + process.exit. update.ts doesn't use findIssueOrExit despite it existing.",
       "criteria": [
@@ -534,7 +534,7 @@
         "update.ts refactored to use shared helper",
         "Consistent error message format across commands"
       ],
-      "notes": []
+      "notes": ["2026-01-08: Already completed as part of aa1b2c (ID prefix matching)"]
     },
     {
       "id": "c9f3a4",

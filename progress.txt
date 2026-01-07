@@ -42,6 +42,17 @@
 
 ---
 
+## 2026-01-08 - b8e2f3
+
+- Verified task was already completed as part of aa1b2c (ID prefix matching)
+- All acceptance criteria met: all commands use `findIssueOrExit`, update.ts already uses it, error messages consistent
+- Files changed: `prd.json` (mark done)
+- **Learnings:**
+  - Tasks can be implicitly completed as part of other work - verify before implementing
+  - The aa1b2c progress entry documented: "The `update.ts` command was not using `findIssueOrExit` - refactored to use it for consistency"
+
+---
+
 ## 2026-01-08 - f6c0d1
 
 - Created `src/schema.ts` as single source of truth for Issue field definitions
