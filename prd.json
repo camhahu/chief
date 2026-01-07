@@ -48,7 +48,7 @@
       "id": "d1e2f3",
       "title": "ID generation utility",
       "parent": "f1a0b2",
-      "done": false,
+      "done": true,
       "labels": ["backend"],
       "context": "Generate 6-character hex IDs. Must check for collisions against existing IDs.",
       "criteria": [

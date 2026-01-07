@@ -3,6 +3,17 @@
 - Use `Bun.file(path).exists()` for existence checks (async)
 - Use `Bun.$` shell for filesystem operations in tests
 - Walk up directory tree using `dirname()` until `parent === dir` (root)
+- Use `crypto.getRandomValues(new Uint8Array(n))` for crypto-secure random bytes
+
+---
+
+## 2026-01-07 - d1e2f3
+
+- Implemented ID generation utility in `src/id.ts`
+- Files changed: `src/id.ts`, `src/id.test.ts`
+- **Learnings:**
+  - `crypto.getRandomValues()` is globally available in Bun (no import needed)
+  - Use Set for O(1) collision checking when generating unique IDs
 
 ---
 
