@@ -1,0 +1,18 @@
+# Reusable Patterns
+
+- Use `Bun.file(path).exists()` for existence checks (async)
+- Use `Bun.$` shell for filesystem operations in tests
+- Walk up directory tree using `dirname()` until `parent === dir` (root)
+
+---
+
+## 2026-01-07 - a7b8c9
+
+- Implemented core JSON read/write utilities in `src/store.ts`
+- Files changed: `src/store.ts`, `src/store.test.ts`, `AGENTS.md`, `.gitignore`
+- **Learnings:**
+  - `Bun.file().size` returns 0 for non-existent files (doesn't throw), use `.exists()` instead
+  - `Bun.file().exists()` is async, requires refactoring sync functions
+  - `Bun.$` shell template provides clean syntax for filesystem ops in tests
+
+---

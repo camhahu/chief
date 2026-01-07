@@ -33,7 +33,7 @@
       "id": "a7b8c9",
       "title": "Core JSON read/write utilities",
       "parent": "f1a0b2",
-      "done": false,
+      "done": true,
       "labels": ["backend"],
       "context": "Shared utilities for loading .issues/issues.json, writing it back with consistent formatting, and finding the file (walk up directory tree).",
       "criteria": [
