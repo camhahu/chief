@@ -271,7 +271,7 @@
       "id": "g1h2i3",
       "title": "chief list",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Display all issues in a readable format. Primary way to view project state.",
       "criteria": [

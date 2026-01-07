@@ -2,6 +2,7 @@
 
 import { init } from './commands/init.ts'
 import { newIssue } from './commands/new.ts'
+import { list } from './commands/list.ts'
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -53,6 +54,9 @@ switch (command) {
       console.error('Usage: chief new \'{"title": "..."}\'')
       process.exit(1)
     }
+    break
+  case 'list':
+    await list()
     break
   default:
     printUnknownCommand(command)

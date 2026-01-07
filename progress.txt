@@ -9,6 +9,17 @@
 - CLI tests need absolute paths when running from different cwd - use `join(import.meta.dir, '..', '..')` to get project root
 - Parse JSON input with try/catch, check for SyntaxError to distinguish parse errors from validation errors
 - Use nullish coalescing (`??`) for applying defaults to optional fields
+- ANSI escape codes: `\x1b[2m` for dim, `\x1b[32m` for green, `\x1b[0m` to reset
+
+---
+
+## 2026-01-07 - g1h2i3
+
+- Implemented `chief list` command in `src/commands/list.ts`
+- Files changed: `src/commands/list.ts`, `src/commands/list.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Group children by parent using `Map<string, Issue[]>` for efficient lookup
+  - Read-only commands follow simpler pattern: read store -> format output -> print
 
 ---
 
