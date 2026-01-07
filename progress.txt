@@ -13,6 +13,16 @@
 
 ---
 
+## 2026-01-07 - d5e6f7
+
+- Implemented `chief done` command in `src/commands/done.ts`
+- Files changed: `src/commands/done.ts`, `src/commands/done.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Simple mutation commands: find by ID -> mutate -> write
+  - Idempotent operations (done on already-done) should succeed silently
+
+---
+
 ## 2026-01-07 - g1h2i3
 
 - Implemented `chief list` command in `src/commands/list.ts`

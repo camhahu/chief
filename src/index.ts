@@ -3,6 +3,7 @@
 import { init } from './commands/init.ts'
 import { newIssue } from './commands/new.ts'
 import { list } from './commands/list.ts'
+import { done } from './commands/done.ts'
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -57,6 +58,14 @@ switch (command) {
     break
   case 'list':
     await list()
+    break
+  case 'done':
+    if (args[1]) {
+      await done(args[1])
+    } else {
+      console.error('Usage: chief done <id>')
+      process.exit(1)
+    }
     break
   default:
     printUnknownCommand(command)

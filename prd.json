@@ -139,7 +139,7 @@
       "id": "d5e6f7",
       "title": "chief done",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Mark an issue complete. Simple field update.",
       "criteria": [
