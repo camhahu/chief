@@ -325,6 +325,231 @@
         "Verify all listed commands actually work"
       ],
       "notes": ["2026-01-07: Already completed as part of j7k8l9"]
+    },
+    {
+      "id": "aa1b2c",
+      "title": "Support ID prefix matching",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "Currently requires full 6-char ID for all commands. Typing full IDs is tedious when a 2-3 char prefix would be unambiguous.",
+      "criteria": [
+        "chief show ab matches issue abc123 if it's the only match",
+        "Ambiguous prefix (matches multiple issues) prints error listing matches",
+        "Works for all commands that take an ID: show, done, reopen, remove, note, update"
+      ],
+      "notes": []
+    },
+    {
+      "id": "bb2c3d",
+      "title": "Add --open and --done flags to list",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "No way to filter list output. When you have many issues, seeing only open ones is essential. Currently flags are silently ignored.",
+      "criteria": [
+        "chief list --open shows only issues where done=false",
+        "chief list --done shows only issues where done=true",
+        "Flags are mutually exclusive (error if both provided)",
+        "Children follow parent's visibility when filtered"
+      ],
+      "notes": []
+    },
+    {
+      "id": "cc3d4e",
+      "title": "Add --label flag to list",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "Labels exist but can't filter by them. Makes labels less useful for organizing work.",
+      "criteria": [
+        "chief list --label=bug shows only issues with 'bug' label",
+        "Can combine with --open/--done",
+        "Parent shown if any child matches (context)"
+      ],
+      "notes": []
+    },
+    {
+      "id": "dd4e5f",
+      "title": "Idempotent done/reopen commands",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "Running 'chief done <id>' on already-done issue says 'Marked as done' which is misleading. Same for reopen on open issues.",
+      "criteria": [
+        "chief done on already-done issue prints 'Already done' and exits 0",
+        "chief reopen on already-open issue prints 'Already open' and exits 0",
+        "No file write occurs if state unchanged"
+      ],
+      "notes": []
+    },
+    {
+      "id": "ee5f6a",
+      "title": "Fix multiline note formatting in show",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "Notes with newlines break alignment in 'chief show' output. Lines after the first lose their indentation.",
+      "criteria": [
+        "Multiline notes have consistent indentation on all lines",
+        "Date prefix only on first line, subsequent lines aligned"
+      ],
+      "notes": []
+    },
+    {
+      "id": "ff6a7b",
+      "title": "Warn on unknown fields in update",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "Typos in field names are silently ignored. 'chief update <id> {\"titl\": \"new\"}' succeeds but does nothing useful.",
+      "criteria": [
+        "Unknown fields in update JSON print warning to stderr",
+        "Update still succeeds (warning, not error)",
+        "Lists valid field names in warning"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a17b8c",
+      "title": "Allow clearing parent with update",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "Can set parent when creating issue but can't change it later. Can't promote a child to top-level or move between parents.",
+      "criteria": [
+        "chief update <id> '{\"parent\": null}' removes parent (promotes to top-level)",
+        "chief update <id> '{\"parent\": \"other\"}' changes parent",
+        "Validates new parent exists and respects nesting rules"
+      ],
+      "notes": []
+    },
+    {
+      "id": "b28c9d",
+      "title": "Hide completed issues by default in list",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["fix"],
+      "context": "Completed issues clutter the list. Most of the time you want to see what's left to do, not what's done.",
+      "criteria": [
+        "chief list shows only open issues by default",
+        "chief list --all shows everything (current behavior)",
+        "chief list --done shows only completed"
+      ],
+      "notes": []
+    },
+    {
+      "id": "c39dae",
+      "title": "Extract command routing table in index.ts",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["refactor"],
+      "context": "index.ts has a large switch statement with duplicated patterns: check args, call function, else print usage. Adding new commands requires changes in 3 places (import, switch case, help.ts).",
+      "criteria": [
+        "Commands defined in a single registry with handler, required args, and usage",
+        "Adding a command is a single-location change",
+        "Argument validation derived from registry metadata"
+      ],
+      "notes": []
+    },
+    {
+      "id": "d4aebf",
+      "title": "DRY up JSON parse + ValidationError handling",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["refactor"],
+      "context": "new.ts and update.ts have identical try/catch patterns for parsing JSON and handling SyntaxError/ValidationError. This pattern will repeat for any command taking JSON input.",
+      "criteria": [
+        "Shared helper for parsing JSON with consistent error handling",
+        "Single place to change error message format",
+        "Used by new and update commands"
+      ],
+      "notes": []
+    },
+    {
+      "id": "e5bfc0",
+      "title": "Extract test setup helpers",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["refactor"],
+      "context": "Every test file has identical boilerplate: PROJECT_ROOT, TEST_DIR, CLI, ISSUES_PATH constants, beforeEach/afterEach for directory setup/teardown. 13 test files all duplicating this.",
+      "criteria": [
+        "Shared test helper module with setup/teardown",
+        "Helper returns paths (testDir, issuesPath, cli)",
+        "Test files import helper instead of duplicating setup"
+      ],
+      "notes": []
+    },
+    {
+      "id": "f6c0d1",
+      "title": "Consolidate Issue type and valid fields",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["refactor"],
+      "context": "Issue fields are defined in multiple places: store.ts (type), new.ts (defaults), update.ts (field assignment), validate.ts (field checks). Adding a field requires changes in 4+ files.",
+      "criteria": [
+        "Single source of truth for Issue schema with field names, types, and defaults",
+        "new.ts derives defaults from schema",
+        "update.ts derives allowed fields from schema",
+        "validate.ts derives checks from schema"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a7d1e2",
+      "title": "Remove node:path dependency",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["refactor"],
+      "context": "Using node:path/join when Bun has path utilities. Minor inconsistency with the 'use Bun stdlib' principle.",
+      "criteria": [
+        "Replace node:path imports with Bun equivalents or template literals",
+        "No node: imports remain except where Bun lacks equivalent"
+      ],
+      "notes": []
+    },
+    {
+      "id": "b8e2f3",
+      "title": "Use consistent error output pattern",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["refactor"],
+      "context": "Some commands use findIssueOrExit, others do manual find + console.error + process.exit. update.ts doesn't use findIssueOrExit despite it existing.",
+      "criteria": [
+        "All commands use findIssueOrExit for ID lookup",
+        "update.ts refactored to use shared helper",
+        "Consistent error message format across commands"
+      ],
+      "notes": []
+    },
+    {
+      "id": "c9f3a4",
+      "title": "Type-safe command handlers",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": ["refactor"],
+      "context": "Command handlers have inconsistent signatures. Some return Promise<void>, some implicitly return. Args passed as individual strings rather than parsed objects.",
+      "criteria": [
+        "All command handlers have explicit Promise<void> return type",
+        "Handler signatures match a common Command interface",
+        "Enables future additions like middleware (logging, timing)"
+      ],
+      "notes": []
     }
   ]
 }
