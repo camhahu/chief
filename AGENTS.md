@@ -12,6 +12,21 @@
 - `bun run typecheck` - Run TypeScript type checking
 - `bun run test` - Run integration tests
 
+## Issue Tracking
+
+Issues are tracked in `.issues/issues.json` via the chief CLI:
+
+- `chief list` - Show open issues
+- `chief list --all` - Show all issues including completed
+- `chief show <id>` - Show full issue details
+- `chief new '{"title": "...", "labels": [...], "context": "...", "criteria": [...]}'` - Create issue
+- `chief done <id>` - Mark issue complete
+- `chief reopen <id>` - Reopen a completed issue
+- `chief note <id> "text"` - Add a note to an issue
+- `chief update <id> '{"field": "value"}'` - Update issue fields
+
+ID prefixes work (e.g., `chief show ab` matches `ab1234` if unambiguous).
+
 ## Code Style
 
 - No barrel exports

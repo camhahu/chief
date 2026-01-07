@@ -7,7 +7,7 @@
 - Use `arg(args, index, usage)` helper that checks for undefined and exits with usage message - provides type narrowing
 - Define valid fields as a simple array, use `filter` + `!includes` to detect unknown fields
 
-- When verifying PRD tasks, check progress.txt for prior completions - work may have been done as part of another task
+- When verifying tasks, check progress.txt for prior completions - work may have been done as part of another task
 - Use `findIssueOrExit(store, idPrefix)` from store.ts when a command needs to find an issue by ID prefix and exit if not found (supports partial ID matching)
 - Install scripts: use `set -euo pipefail`, detect OS/arch with `uname -s/-m`, prefer curl with wget fallback
 - Use `Bun.file(path).exists()` for existence checks (async)

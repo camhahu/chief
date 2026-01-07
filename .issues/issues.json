@@ -1,11 +1,14 @@
 {
   "issues": [
     {
-      "id": "f1a0b2",
+      "id": "0c39b3",
       "title": "Project scaffolding and core utilities",
       "parent": null,
       "done": true,
-      "labels": ["infra"],
+      "doneAt": "2026-01-07T15:26:15.068Z",
+      "labels": [
+        "infra"
+      ],
       "context": "Foundation for the CLI. TypeScript with Bun, no CLI framework. Set up the core read/write/validate logic that all commands depend on.",
       "criteria": [
         "Running 'chief init && chief new {\"title\":\"test\"} && chief list' works end-to-end",
@@ -15,71 +18,14 @@
       "notes": []
     },
     {
-      "id": "c3d4e5",
-      "title": "Initialize project structure",
-      "parent": "f1a0b2",
-      "done": true,
-      "labels": ["infra"],
-      "context": "TypeScript with Bun. No CLI framework - parse args manually. Single entry point.",
-      "criteria": [
-        "package.json with type: module and bin entry",
-        "tsconfig.json configured",
-        "src/index.ts as entry point",
-        "bun run build produces working binary"
-      ],
-      "notes": []
-    },
-    {
-      "id": "a7b8c9",
-      "title": "Core JSON read/write utilities",
-      "parent": "f1a0b2",
-      "done": true,
-      "labels": ["backend"],
-      "context": "Shared utilities for loading .issues/issues.json, writing it back with consistent formatting, and finding the file (walk up directory tree).",
-      "criteria": [
-        "Function to locate .issues/issues.json from cwd or parent dirs",
-        "Function to read and parse the file",
-        "Function to write with consistent 2-space indent formatting",
-        "Errors if file not found (except for init)"
-      ],
-      "notes": []
-    },
-    {
-      "id": "d1e2f3",
-      "title": "ID generation utility",
-      "parent": "f1a0b2",
-      "done": true,
-      "labels": ["backend"],
-      "context": "Generate 6-character hex IDs. Must check for collisions against existing IDs.",
-      "criteria": [
-        "Generates random 6-char hex string",
-        "Checks against existing IDs and regenerates on collision",
-        "Uses crypto-secure randomness"
-      ],
-      "notes": []
-    },
-    {
-      "id": "e4f5a6",
-      "title": "Validation logic",
-      "parent": "f1a0b2",
-      "done": true,
-      "labels": ["backend"],
-      "context": "Enforce schema rules before writing. Reject invalid mutations.",
-      "criteria": [
-        "Validates all required fields present on issues",
-        "Validates parent references existing issue or is null",
-        "Validates parent is not itself a child (max 1 level nesting)",
-        "Validates no self-referential parent",
-        "Returns clear error messages"
-      ],
-      "notes": []
-    },
-    {
-      "id": "b2c3d4",
+      "id": "0d2465",
       "title": "chief init",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.117Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Creates .issues/issues.json with empty issues array. Entry point for new projects.",
       "criteria": [
         "Running in empty dir creates .issues/issues.json",
@@ -89,42 +35,32 @@
       "notes": []
     },
     {
-      "id": "f6a7b8",
+      "id": "c779a6",
       "title": "chief new",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.127Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Core command for creating issues. Accepts JSON, applies defaults, generates ID.",
       "criteria": [
         "chief new '{\"title\":\"foo\"}' creates issue and prints ID",
         "Created issue appears in chief list output"
       ],
-      "notes": ["2026-01-07: Interactive mode cancelled - agent-first design"]
+      "notes": [
+        "2026-01-08: 2026-01-07: Interactive mode cancelled - agent-first design"
+      ]
     },
     {
-      "id": "c9d0e1",
-      "title": "chief new with JSON argument",
-      "parent": "f6a7b8",
-      "done": true,
-      "labels": ["feature"],
-      "context": "chief new '{\"title\": \"...\"}' - parse JSON, apply defaults, append to issues array.",
-      "criteria": [
-        "Parses JSON from first positional argument",
-        "Generates unique 6-char hex ID",
-        "Applies defaults: parent=null, done=false, labels=[], context=\"\", criteria=[], notes=[]",
-        "Validates parent reference if provided",
-        "Appends to issues array",
-        "Prints created issue ID"
-      ],
-      "notes": []
-    },
-
-    {
-      "id": "d5e6f7",
+      "id": "d7aa18",
       "title": "chief done",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.146Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Mark an issue complete. Simple field update.",
       "criteria": [
         "Accepts issue ID as argument",
@@ -135,11 +71,14 @@
       "notes": []
     },
     {
-      "id": "b8c9d0",
+      "id": "6c43cc",
       "title": "chief reopen",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.156Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Mark a done issue as incomplete again.",
       "criteria": [
         "Accepts issue ID as argument",
@@ -150,11 +89,14 @@
       "notes": []
     },
     {
-      "id": "e1f2a3",
+      "id": "6292b5",
       "title": "chief remove",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.165Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Delete an issue and its children recursively.",
       "criteria": [
         "chief remove <id> deletes issue from list",
@@ -164,40 +106,32 @@
       "notes": []
     },
     {
-      "id": "f4a5b6",
+      "id": "caaeb0",
       "title": "chief note",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.173Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Append timestamped notes to an issue.",
       "criteria": [
         "chief note <id> 'text' appends timestamped note",
         "Note appears in chief show <id> output with date prefix"
       ],
-      "notes": ["2026-01-07: Interactive mode cancelled - agent-first design"]
+      "notes": [
+        "2026-01-08: 2026-01-07: Interactive mode cancelled - agent-first design"
+      ]
     },
     {
-      "id": "c7d8e9",
-      "title": "chief note with text argument",
-      "parent": "f4a5b6",
-      "done": true,
-      "labels": ["feature"],
-      "context": "chief note <id> \"text\" - append timestamped note inline.",
-      "criteria": [
-        "Accepts ID and text as arguments",
-        "Prepends current date (YYYY-MM-DD format)",
-        "Appends to notes array",
-        "Fails if ID not found"
-      ],
-      "notes": []
-    },
-
-    {
-      "id": "g1h2i3",
+      "id": "3120fa",
       "title": "chief list",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.202Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Display all issues in a readable format. Primary way to view project state.",
       "criteria": [
         "chief list shows all issues with ID, title, done status",
@@ -208,11 +142,14 @@
       "notes": []
     },
     {
-      "id": "h3i4j5",
+      "id": "1b4515",
       "title": "chief show",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.221Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Display full details of a single issue.",
       "criteria": [
         "chief show <id> prints all fields of the issue",
@@ -222,13 +159,15 @@
       ],
       "notes": []
     },
-
     {
-      "id": "j7k8l9",
+      "id": "f541cf",
       "title": "CLI help and error handling",
       "parent": null,
       "done": true,
-      "labels": ["infra"],
+      "doneAt": "2026-01-07T15:26:15.232Z",
+      "labels": [
+        "infra"
+      ],
       "context": "Consistent UX for help text and errors across all commands.",
       "criteria": [
         "chief --help lists all commands with one-line descriptions",
@@ -239,11 +178,14 @@
       "notes": []
     },
     {
-      "id": "k9l0m1",
+      "id": "6587a7",
       "title": "install.sh script",
       "parent": null,
       "done": true,
-      "labels": ["infra"],
+      "doneAt": "2026-01-07T15:26:15.241Z",
+      "labels": [
+        "infra"
+      ],
       "context": "One-liner install via curl | bash. Downloads binary for user's platform from GitHub releases.",
       "criteria": [
         "curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash works",
@@ -254,11 +196,14 @@
       "notes": []
     },
     {
-      "id": "m2n3o4",
+      "id": "728615",
       "title": "chief update command",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.251Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Partial update of an issue. Saves agents from read-modify-write cycle for simple field changes.",
       "criteria": [
         "chief update <id> '{\"field\": \"value\"}' merges JSON into existing issue",
@@ -270,11 +215,14 @@
       "notes": []
     },
     {
-      "id": "p5q6r7",
+      "id": "62d303",
       "title": "Add doneAt timestamp",
       "parent": null,
       "done": true,
-      "labels": ["feature"],
+      "doneAt": "2026-01-07T15:26:15.260Z",
+      "labels": [
+        "feature"
+      ],
       "context": "Record when issues are completed for tracking velocity and history.",
       "criteria": [
         "chief done sets doneAt to current ISO 8601 timestamp",
@@ -285,25 +233,33 @@
       "notes": []
     },
     {
-      "id": "s8t9u0",
+      "id": "2f68bb",
       "title": "Use Bun.color for ANSI colors",
       "parent": null,
       "done": true,
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.271Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "Replace hand-rolled ANSI escape codes with Bun.color() built-in.",
       "criteria": [
         "Remove duplicated ANSI constants from list.ts and show.ts",
         "Use Bun.color() for all terminal coloring",
         "Output unchanged visually"
       ],
-      "notes": ["2026-01-07: Bun.color only supports colors, not styles (bold/dim). Created src/color.ts with Bun.color for green and ANSI codes for styles."]
+      "notes": [
+        "2026-01-08: 2026-01-07: Bun.color only supports colors, not styles (bold/dim). Created src/color.ts with Bun.color for green and ANSI codes for styles."
+      ]
     },
     {
-      "id": "v1w2x3",
+      "id": "b8806b",
       "title": "Extract findIssueOrExit helper",
       "parent": null,
       "done": true,
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.281Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "DRY up duplicated issue lookup pattern across commands.",
       "criteria": [
         "New helper function in shared module",
@@ -313,26 +269,33 @@
       "notes": []
     },
     {
-      "id": "y4z5a6",
+      "id": "50a8fb",
       "title": "Clean up help text",
       "parent": null,
       "done": true,
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.290Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "Help text currently lists commands that don't exist (criteria, label, edit, status).",
       "criteria": [
         "Remove non-existent commands from --help output",
         "Add update command to --help output",
         "Verify all listed commands actually work"
       ],
-      "notes": ["2026-01-07: Already completed as part of j7k8l9"]
+      "notes": [
+        "2026-01-08: 2026-01-07: Already completed as part of j7k8l9"
+      ]
     },
     {
-      "id": "aa1b2c",
+      "id": "af3396",
       "title": "Support ID prefix matching",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-07T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.300Z",
+      "labels": [
+        "fix"
+      ],
       "context": "Currently requires full 6-char ID for all commands. Typing full IDs is tedious when a 2-3 char prefix would be unambiguous.",
       "criteria": [
         "chief show ab matches issue abc123 if it's the only match",
@@ -342,12 +305,14 @@
       "notes": []
     },
     {
-      "id": "bb2c3d",
+      "id": "e6158f",
       "title": "Add --open and --done flags to list",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-07T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.310Z",
+      "labels": [
+        "fix"
+      ],
       "context": "No way to filter list output. When you have many issues, seeing only open ones is essential. Currently flags are silently ignored.",
       "criteria": [
         "chief list --open shows only issues where done=false",
@@ -358,12 +323,14 @@
       "notes": []
     },
     {
-      "id": "cc3d4e",
+      "id": "fd54dc",
       "title": "Add --label flag to list",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.319Z",
+      "labels": [
+        "fix"
+      ],
       "context": "Labels exist but can't filter by them. Makes labels less useful for organizing work.",
       "criteria": [
         "chief list --label=bug shows only issues with 'bug' label",
@@ -373,12 +340,14 @@
       "notes": []
     },
     {
-      "id": "dd4e5f",
+      "id": "a5e973",
       "title": "Idempotent done/reopen commands",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-07T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.329Z",
+      "labels": [
+        "fix"
+      ],
       "context": "Running 'chief done <id>' on already-done issue says 'Marked as done' which is misleading. Same for reopen on open issues.",
       "criteria": [
         "chief done on already-done issue prints 'Already done' and exits 0",
@@ -388,12 +357,14 @@
       "notes": []
     },
     {
-      "id": "ee5f6a",
+      "id": "ca3dc0",
       "title": "Fix multiline note formatting in show",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.338Z",
+      "labels": [
+        "fix"
+      ],
       "context": "Notes with newlines break alignment in 'chief show' output. Lines after the first lose their indentation.",
       "criteria": [
         "Multiline notes have consistent indentation on all lines",
@@ -402,12 +373,14 @@
       "notes": []
     },
     {
-      "id": "ff6a7b",
+      "id": "a0a0e8",
       "title": "Warn on unknown fields in update",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.348Z",
+      "labels": [
+        "fix"
+      ],
       "context": "Typos in field names are silently ignored. 'chief update <id> {\"titl\": \"new\"}' succeeds but does nothing useful.",
       "criteria": [
         "Unknown fields in update JSON print warning to stderr",
@@ -417,12 +390,14 @@
       "notes": []
     },
     {
-      "id": "a17b8c",
+      "id": "de1d97",
       "title": "Allow clearing parent with update",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.358Z",
+      "labels": [
+        "fix"
+      ],
       "context": "Can set parent when creating issue but can't change it later. Can't promote a child to top-level or move between parents.",
       "criteria": [
         "chief update <id> '{\"parent\": null}' removes parent (promotes to top-level)",
@@ -432,12 +407,14 @@
       "notes": []
     },
     {
-      "id": "b28c9d",
+      "id": "f559c8",
       "title": "Hide completed issues by default in list",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["fix"],
+      "doneAt": "2026-01-07T15:26:15.368Z",
+      "labels": [
+        "fix"
+      ],
       "context": "Completed issues clutter the list. Most of the time you want to see what's left to do, not what's done.",
       "criteria": [
         "chief list shows only open issues by default",
@@ -447,12 +424,14 @@
       "notes": []
     },
     {
-      "id": "c39dae",
+      "id": "0fc871",
       "title": "Extract command routing table in index.ts",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.378Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "index.ts has a large switch statement with duplicated patterns: check args, call function, else print usage. Adding new commands requires changes in 3 places (import, switch case, help.ts).",
       "criteria": [
         "Commands defined in a single registry with handler, required args, and usage",
@@ -462,12 +441,14 @@
       "notes": []
     },
     {
-      "id": "d4aebf",
+      "id": "a477bc",
       "title": "DRY up JSON parse + ValidationError handling",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.387Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "new.ts and update.ts have identical try/catch patterns for parsing JSON and handling SyntaxError/ValidationError. This pattern will repeat for any command taking JSON input.",
       "criteria": [
         "Shared helper for parsing JSON with consistent error handling",
@@ -477,12 +458,14 @@
       "notes": []
     },
     {
-      "id": "e5bfc0",
+      "id": "93093f",
       "title": "Extract test setup helpers",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.396Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "Every test file has identical boilerplate: PROJECT_ROOT, TEST_DIR, CLI, ISSUES_PATH constants, beforeEach/afterEach for directory setup/teardown. 13 test files all duplicating this.",
       "criteria": [
         "Shared test helper module with setup/teardown",
@@ -492,12 +475,14 @@
       "notes": []
     },
     {
-      "id": "f6c0d1",
+      "id": "8bf4ef",
       "title": "Consolidate Issue type and valid fields",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.405Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "Issue fields are defined in multiple places: store.ts (type), new.ts (defaults), update.ts (field assignment), validate.ts (field checks). Adding a field requires changes in 4+ files.",
       "criteria": [
         "Single source of truth for Issue schema with field names, types, and defaults",
@@ -508,48 +493,170 @@
       "notes": []
     },
     {
-      "id": "a7d1e2",
+      "id": "668d30",
       "title": "Remove node:path dependency",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.414Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "Using node:path/join when Bun has path utilities. Minor inconsistency with the 'use Bun stdlib' principle.",
       "criteria": [
         "Replace node:path imports with Bun equivalents or template literals",
         "No node: imports remain except where Bun lacks equivalent"
       ],
-      "notes": ["2026-01-08: Also removed node:fs/promises by using Bun.write (creates parent dirs automatically)"]
+      "notes": [
+        "2026-01-08: 2026-01-08: Also removed node:fs/promises by using Bun.write (creates parent dirs automatically)"
+      ]
     },
     {
-      "id": "b8e2f3",
+      "id": "486ed0",
       "title": "Use consistent error output pattern",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.424Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "Some commands use findIssueOrExit, others do manual find + console.error + process.exit. update.ts doesn't use findIssueOrExit despite it existing.",
       "criteria": [
         "All commands use findIssueOrExit for ID lookup",
         "update.ts refactored to use shared helper",
         "Consistent error message format across commands"
       ],
-      "notes": ["2026-01-08: Already completed as part of aa1b2c (ID prefix matching)"]
+      "notes": [
+        "2026-01-08: 2026-01-08: Already completed as part of aa1b2c (ID prefix matching)"
+      ]
     },
     {
-      "id": "c9f3a4",
+      "id": "e865dc",
       "title": "Type-safe command handlers",
       "parent": null,
       "done": true,
-      "doneAt": "2026-01-08T00:00:00.000Z",
-      "labels": ["refactor"],
+      "doneAt": "2026-01-07T15:26:15.433Z",
+      "labels": [
+        "refactor"
+      ],
       "context": "Command handlers have inconsistent signatures. Some return Promise<void>, some implicitly return. Args passed as individual strings rather than parsed objects.",
       "criteria": [
         "All command handlers have explicit Promise<void> return type",
         "Handler signatures match a common Command interface",
         "Enables future additions like middleware (logging, timing)"
       ],
-      "notes": ["2026-01-08: Most of this was already implemented as part of c39dae (command registry). Exported Command interface for external use."]
+      "notes": [
+        "2026-01-08: 2026-01-08: Most of this was already implemented as part of c39dae (command registry). Exported Command interface for external use."
+      ]
+    },
+    {
+      "id": "923ae4",
+      "title": "Initialize project structure",
+      "parent": "0c39b3",
+      "done": true,
+      "doneAt": "2026-01-07T15:26:15.079Z",
+      "labels": [
+        "infra"
+      ],
+      "context": "TypeScript with Bun. No CLI framework - parse args manually. Single entry point.",
+      "criteria": [
+        "package.json with type: module and bin entry",
+        "tsconfig.json configured",
+        "src/index.ts as entry point",
+        "bun run build produces working binary"
+      ],
+      "notes": []
+    },
+    {
+      "id": "99a418",
+      "title": "Core JSON read/write utilities",
+      "parent": "0c39b3",
+      "done": true,
+      "doneAt": "2026-01-07T15:26:15.088Z",
+      "labels": [
+        "backend"
+      ],
+      "context": "Shared utilities for loading .issues/issues.json, writing it back with consistent formatting, and finding the file (walk up directory tree).",
+      "criteria": [
+        "Function to locate .issues/issues.json from cwd or parent dirs",
+        "Function to read and parse the file",
+        "Function to write with consistent 2-space indent formatting",
+        "Errors if file not found (except for init)"
+      ],
+      "notes": []
+    },
+    {
+      "id": "393357",
+      "title": "ID generation utility",
+      "parent": "0c39b3",
+      "done": true,
+      "doneAt": "2026-01-07T15:26:15.098Z",
+      "labels": [
+        "backend"
+      ],
+      "context": "Generate 6-character hex IDs. Must check for collisions against existing IDs.",
+      "criteria": [
+        "Generates random 6-char hex string",
+        "Checks against existing IDs and regenerates on collision",
+        "Uses crypto-secure randomness"
+      ],
+      "notes": []
+    },
+    {
+      "id": "e28953",
+      "title": "Validation logic",
+      "parent": "0c39b3",
+      "done": true,
+      "doneAt": "2026-01-07T15:26:15.108Z",
+      "labels": [
+        "backend"
+      ],
+      "context": "Enforce schema rules before writing. Reject invalid mutations.",
+      "criteria": [
+        "Validates all required fields present on issues",
+        "Validates parent references existing issue or is null",
+        "Validates parent is not itself a child (max 1 level nesting)",
+        "Validates no self-referential parent",
+        "Returns clear error messages"
+      ],
+      "notes": []
+    },
+    {
+      "id": "504218",
+      "title": "chief new with JSON argument",
+      "parent": "c779a6",
+      "done": true,
+      "doneAt": "2026-01-07T15:26:15.136Z",
+      "labels": [
+        "feature"
+      ],
+      "context": "chief new '{\"title\": \"...\"}' - parse JSON, apply defaults, append to issues array.",
+      "criteria": [
+        "Parses JSON from first positional argument",
+        "Generates unique 6-char hex ID",
+        "Applies defaults: parent=null, done=false, labels=[], context=\"\", criteria=[], notes=[]",
+        "Validates parent reference if provided",
+        "Appends to issues array",
+        "Prints created issue ID"
+      ],
+      "notes": []
+    },
+    {
+      "id": "ccc446",
+      "title": "chief note with text argument",
+      "parent": "caaeb0",
+      "done": true,
+      "doneAt": "2026-01-07T15:26:15.183Z",
+      "labels": [
+        "feature"
+      ],
+      "context": "chief note <id> \"text\" - append timestamped note inline.",
+      "criteria": [
+        "Accepts ID and text as arguments",
+        "Prepends current date (YYYY-MM-DD format)",
+        "Appends to notes array",
+        "Fails if ID not found"
+      ],
+      "notes": []
     }
   ]
 }
