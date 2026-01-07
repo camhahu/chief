@@ -105,7 +105,7 @@ test('chief list --done shows only done issues', async () => {
   expect(listResult).not.toContain('Open task')
 })
 
-test('chief list --open and --done are mutually exclusive', async () => {
+test('chief list filter flags are mutually exclusive', async () => {
   const result = await $`bun run ${CLI} list --open --done`
     .cwd(testDir)
     .quiet()

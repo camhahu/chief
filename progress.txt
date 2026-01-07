@@ -55,6 +55,18 @@
 
 ---
 
+## 2026-01-08 - 7343b1
+
+- Made --all, --open, and --done flags mutually exclusive in `chief list`
+- Previously --all --done silently acted as --done (last flag wins)
+- Added tests for all three conflicting flag combinations
+- Files changed: `src/index.ts`, `src/commands/list.test.ts`
+- **Learnings:**
+  - Use `[flag1, flag2, flag3].filter(Boolean).length > 1` to detect multiple flags set
+  - Keeps flag conflict detection concise and extensible
+
+---
+
 ## 2026-01-08 - 9f6055
 
 - Refactored CLI to use Commander.js for argument parsing

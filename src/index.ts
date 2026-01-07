@@ -34,8 +34,9 @@ program
   .option('--done', 'Show only completed issues')
   .option('--label <name>', 'Filter by label')
   .action((options: { all?: boolean; open?: boolean; done?: boolean; label?: string }) => {
-    if (options.open && options.done) {
-      console.error('Error: --open and --done are mutually exclusive')
+    const filterFlags = [options.all, options.open, options.done].filter(Boolean)
+    if (filterFlags.length > 1) {
+      console.error('Error: --all, --open, and --done are mutually exclusive')
       process.exit(1)
     }
     let filter: ListFilter = 'open'
