@@ -16,6 +16,17 @@
 
 ---
 
+## 2026-01-07 - f1a0b2
+
+- Completed parent story "Project scaffolding and core utilities"
+- All child tasks done: c3d4e5, a7b8c9, d1e2f3, e4f5a6
+- Verified acceptance criteria: end-to-end workflow, error handling, help text
+- **Learnings:**
+  - Parent stories auto-complete when all children are done
+  - Verify acceptance criteria manually before marking parent complete
+
+---
+
 ## 2026-01-07 - m2n3o4
 
 - Implemented `chief update` command in `src/commands/update.ts`

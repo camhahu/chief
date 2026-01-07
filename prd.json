@@ -4,7 +4,7 @@
       "id": "f1a0b2",
       "title": "Project scaffolding and core utilities",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["infra"],
       "context": "Foundation for the CLI. TypeScript with Bun, no CLI framework. Set up the core read/write/validate logic that all commands depend on.",
       "criteria": [
