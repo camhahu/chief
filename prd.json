@@ -18,7 +18,7 @@
       "id": "c3d4e5",
       "title": "Initialize project structure",
       "parent": "f1a0b2",
-      "done": false,
+      "done": true,
       "labels": ["infra"],
       "context": "TypeScript with Bun. No CLI framework - parse args manually. Single entry point.",
       "criteria": [
