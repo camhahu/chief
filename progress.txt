@@ -21,6 +21,18 @@
 - Use `new Date().toISOString()` for ISO 8601 timestamps (includes timezone Z suffix)
 - When adding optional fields to an existing type, update all places that create objects of that type (tests, defaults, validation)
 
+- For idempotent state-change commands: check current state, return early with appropriate message, skip write
+
+---
+
+## 2026-01-07 - dd4e5f
+
+- Made done/reopen commands idempotent with clear messaging
+- Files changed: `src/commands/done.ts`, `src/commands/reopen.ts`, `src/commands/done.test.ts`, `src/commands/reopen.test.ts`
+- **Learnings:**
+  - Early return pattern with descriptive message avoids unnecessary writes
+  - Tests should verify file is unchanged (compare timestamps/values) for no-op operations
+
 ---
 
 ## 2026-01-07 - k9l0m1

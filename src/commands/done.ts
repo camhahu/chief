@@ -4,6 +4,11 @@ export async function done(id: string): Promise<void> {
   const store = await readIssues()
   const issue = findIssueOrExit(store, id)
 
+  if (issue.done) {
+    console.log(`Already done`)
+    return
+  }
+
   issue.done = true
   issue.doneAt = new Date().toISOString()
   await writeIssues(store)

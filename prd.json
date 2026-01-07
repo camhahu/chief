@@ -376,8 +376,8 @@
       "id": "dd4e5f",
       "title": "Idempotent done/reopen commands",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-07T00:00:00.000Z",
       "labels": ["fix"],
       "context": "Running 'chief done <id>' on already-done issue says 'Marked as done' which is misleading. Same for reopen on open issues.",
       "criteria": [

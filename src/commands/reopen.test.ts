@@ -62,11 +62,8 @@ test('chief reopen is idempotent', async () => {
     .text()
   const id = createResult.trim()
 
-  await $`bun run ${CLI} done ${id}`.cwd(TEST_DIR).quiet()
-  await $`bun run ${CLI} reopen ${id}`.cwd(TEST_DIR).quiet()
   const result = await $`bun run ${CLI} reopen ${id}`.cwd(TEST_DIR).text()
-
-  expect(result.trim()).toBe(`Reopened ${id}`)
+  expect(result.trim()).toBe(`Already open`)
 
   const content = await Bun.file(ISSUES_PATH).json()
   expect(content.issues[0].done).toBe(false)

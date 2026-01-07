@@ -61,12 +61,16 @@ test('chief done is idempotent', async () => {
   const id = createResult.trim()
 
   await $`bun run ${CLI} done ${id}`.cwd(TEST_DIR).quiet()
-  const result = await $`bun run ${CLI} done ${id}`.cwd(TEST_DIR).text()
 
-  expect(result.trim()).toBe(`Marked ${id} as done`)
+  const contentBefore = await Bun.file(ISSUES_PATH).json()
+  const doneAtBefore = contentBefore.issues[0].doneAt
+
+  const result = await $`bun run ${CLI} done ${id}`.cwd(TEST_DIR).text()
+  expect(result.trim()).toBe(`Already done`)
 
   const content = await Bun.file(ISSUES_PATH).json()
   expect(content.issues[0].done).toBe(true)
+  expect(content.issues[0].doneAt).toBe(doneAtBefore)
 })
 
 test('chief done fails without ID argument', async () => {
