@@ -302,7 +302,7 @@
       "id": "v1w2x3",
       "title": "Extract findIssueOrExit helper",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["refactor"],
       "context": "DRY up duplicated issue lookup pattern across commands.",
       "criteria": [

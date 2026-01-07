@@ -1,13 +1,8 @@
-import { readIssues, writeIssues } from '../store.ts'
+import { readIssues, writeIssues, findIssueOrExit } from '../store.ts'
 
 export async function reopen(id: string): Promise<void> {
   const store = await readIssues()
-
-  const issue = store.issues.find((i) => i.id === id)
-  if (!issue) {
-    console.error(`Issue ${id} not found`)
-    process.exit(1)
-  }
+  const issue = findIssueOrExit(store, id)
 
   issue.done = false
   issue.doneAt = null

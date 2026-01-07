@@ -30,10 +30,6 @@ export class IssuesNotFoundError extends Error {
   }
 }
 
-/**
- * Walk up the directory tree from cwd looking for .issues/issues.json
- * Returns the path to the issues.json file if found
- */
 export async function findIssuesPath(
   startDir: string = process.cwd()
 ): Promise<string | null> {
@@ -54,10 +50,6 @@ export async function findIssuesPath(
   }
 }
 
-/**
- * Read and parse the issues.json file
- * Throws IssuesNotFoundError if file not found
- */
 export async function readIssues(startDir?: string): Promise<IssuesStore> {
   const path = await findIssuesPath(startDir)
   if (!path) {
@@ -69,10 +61,6 @@ export async function readIssues(startDir?: string): Promise<IssuesStore> {
   return JSON.parse(text) as IssuesStore
 }
 
-/**
- * Write issues to the issues.json file with consistent 2-space formatting
- * Throws IssuesNotFoundError if file not found
- */
 export async function writeIssues(
   store: IssuesStore,
   startDir?: string
@@ -84,4 +72,13 @@ export async function writeIssues(
 
   const json = JSON.stringify(store, null, 2) + '\n'
   await Bun.write(path, json)
+}
+
+export function findIssueOrExit(store: IssuesStore, id: string): Issue {
+  const issue = store.issues.find((i) => i.id === id)
+  if (!issue) {
+    console.error(`Issue ${id} not found`)
+    process.exit(1)
+  }
+  return issue
 }

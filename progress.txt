@@ -1,6 +1,7 @@
 # Reusable Patterns
 
 - When verifying PRD tasks, check progress.txt for prior completions - work may have been done as part of another task
+- Use `findIssueOrExit(store, id)` from store.ts when a command needs to find an issue by ID and exit if not found
 
 - Use `Bun.file(path).exists()` for existence checks (async)
 - Use `Bun.$` shell for filesystem operations in tests
@@ -19,6 +20,16 @@
 - Test stderr output with `Bun.spawn` + pipe stderr, then read with `new Response(proc.stderr).text()`
 - Use `new Date().toISOString()` for ISO 8601 timestamps (includes timezone Z suffix)
 - When adding optional fields to an existing type, update all places that create objects of that type (tests, defaults, validation)
+
+---
+
+## 2026-01-07 - v1w2x3
+
+- Extracted `findIssueOrExit` helper to DRY up duplicated issue lookup pattern
+- Files changed: `src/store.ts`, `src/commands/done.ts`, `src/commands/reopen.ts`, `src/commands/remove.ts`, `src/commands/show.ts`, `src/commands/note.ts`
+- **Learnings:**
+  - Place shared helpers in the module that already exports the types they work with (store.ts has Issue/IssuesStore)
+  - The helper returns `Issue` (not `Issue | undefined`) because it exits on failure - enables direct use without null checks
 
 ---
 
