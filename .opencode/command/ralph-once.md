@@ -5,6 +5,8 @@ subtask: false
 
 # Execute ONE Task from PRD
 
+The PRD is located at `prd.json` in the project root.
+
 1. **Read PRD** - Parse all tasks, dependencies, and acceptance criteria
 2. **Select ONE task** - Pick highest priority unblocked task
 3. **Execute** - Implement incrementally, follow existing patterns
