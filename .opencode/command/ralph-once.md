@@ -14,7 +14,9 @@ The PRD is located at `prd.json` in the project root.
 4. **Verify** - Run `bun run typecheck` and `bun run test`, manually test, check acceptance criteria
 5. **Update PRD** - Mark task as completed
 6. **Update progress.txt** - Append progress entry (see format below), add any reusable patterns to TOP
-7. **Commit** - Stage changes and commit using format from AGENTS.md
+7. **Unslop** - Run the `unslop` agent to clean up AI-generated code
+8. **Re-verify** - Run `bun run typecheck` and `bun run test` again after unslopping
+9. **Commit** - Stage changes and commit using format from AGENTS.md
 
 ## Bug Protocol
 
