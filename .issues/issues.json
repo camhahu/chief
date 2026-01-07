@@ -657,6 +657,157 @@
         "Fails if ID not found"
       ],
       "notes": []
+    },
+    {
+      "id": "6110aa",
+      "title": "Tests should not output to stdout in happy case",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "testing"
+      ],
+      "context": "Integration tests currently produce stdout output when passing. Tests should be silent on success.",
+      "criteria": [
+        "Passing tests produce no stdout output",
+        "Failing tests still show useful error info"
+      ],
+      "notes": []
+    },
+    {
+      "id": "953632",
+      "title": "Change issues.json format to 1 issue per line",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "storage"
+      ],
+      "context": "Current pretty-printed JSON makes issues.json very long. Consider JSONL or 1-issue-per-line format for more compact storage and easier diffing.",
+      "criteria": [
+        "Issues stored in compact format",
+        "Still valid JSON/JSONL",
+        "Easy to read diffs in git"
+      ],
+      "notes": []
+    },
+    {
+      "id": "c6aa96",
+      "title": "Parent ID field should support prefix matching",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "bug",
+        "ux"
+      ],
+      "context": "When creating/updating issues with parent field, must use exact 6-char ID. All other commands (show, done, etc.) support prefix matching. Inconsistent UX.",
+      "criteria": [
+        "parent field accepts ID prefixes",
+        "Ambiguous prefix shows error like other commands",
+        "Works in both new and update commands"
+      ],
+      "notes": []
+    },
+    {
+      "id": "62e47a",
+      "title": "Use Zod for input parsing and validation",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "refactor"
+      ],
+      "context": "Currently using manual validation in schema.ts and parseInput functions. Zod would provide better type inference, cleaner validation code, and better error messages.",
+      "criteria": [
+        "Replace manual validation with Zod schemas",
+        "Maintain current error message quality",
+        "Type inference from schemas"
+      ],
+      "notes": []
+    },
+    {
+      "id": "9f6055",
+      "title": "Use Commander.js for CLI arg parsing",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "refactor"
+      ],
+      "context": "Current arg parsing in commands.ts is manual and verbose. Commander would provide standardized flag handling, auto-generated help, and cleaner code.",
+      "criteria": [
+        "Replace manual arg parsing with Commander",
+        "Maintain current command interface",
+        "Better help text generation"
+      ],
+      "notes": []
+    },
+    {
+      "id": "18dba8",
+      "title": "update {done: true} should set doneAt timestamp",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "bug"
+      ],
+      "context": "Using update to set done: true does not set doneAt timestamp. The done command sets both. Creates data inconsistency.",
+      "criteria": [
+        "update with done: true also sets doneAt",
+        "update with done: false clears doneAt",
+        "Consistent with done/reopen commands"
+      ],
+      "notes": []
+    },
+    {
+      "id": "7343b1",
+      "title": "Warn or error on conflicting list flags",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "ux"
+      ],
+      "context": "--all --done silently acts as --done (last flag wins). Only --open --done errors. Should be consistent.",
+      "criteria": [
+        "Either error on all conflicting flag combos",
+        "Or document the precedence behavior"
+      ],
+      "notes": []
+    },
+    {
+      "id": "eb5b2a",
+      "title": "init should indicate when already initialized",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "ux"
+      ],
+      "context": "Running init when already initialized just prints the path. Could say Already initialized for clarity.",
+      "criteria": [
+        "Print Already initialized when .issues exists",
+        "Still print the path"
+      ],
+      "notes": []
+    },
+    {
+      "id": "82c234",
+      "title": "Separate process.exit from store logic",
+      "parent": null,
+      "done": false,
+      "doneAt": null,
+      "labels": [
+        "refactor"
+      ],
+      "context": "findIssueOrExit in store.ts calls process.exit(). Should return Issue | null and let callers handle exit. Separates I/O from logic for better testability.",
+      "criteria": [
+        "findIssueOrExit renamed or split",
+        "Callers handle not-found case",
+        "Store module has no process.exit calls"
+      ],
+      "notes": []
     }
   ]
 }
