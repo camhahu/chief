@@ -106,7 +106,7 @@
       "id": "c9d0e1",
       "title": "chief new with JSON argument",
       "parent": "f6a7b8",
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "chief new '{\"title\": \"...\"}' - parse JSON, apply defaults, append to issues array.",
       "criteria": [

@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { init } from './commands/init.ts'
+import { newIssue } from './commands/new.ts'
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -44,6 +45,14 @@ if (!command || command === '--help' || command === '-h') {
 switch (command) {
   case 'init':
     await init()
+    break
+  case 'new':
+    if (args[1]) {
+      await newIssue(args[1])
+    } else {
+      console.error('Usage: chief new \'{"title": "..."}\'')
+      process.exit(1)
+    }
     break
   default:
     printUnknownCommand(command)

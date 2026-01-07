@@ -7,6 +7,18 @@
 - Use type guards with `unknown` for runtime validation (return `x is Type` pattern)
 - Use `as const` for compile-time tuple inference on required field arrays
 - CLI tests need absolute paths when running from different cwd - use `join(import.meta.dir, '..', '..')` to get project root
+- Parse JSON input with try/catch, check for SyntaxError to distinguish parse errors from validation errors
+- Use nullish coalescing (`??`) for applying defaults to optional fields
+
+---
+
+## 2026-01-07 - c9d0e1
+
+- Implemented `chief new` command with JSON argument in `src/commands/new.ts`
+- Files changed: `src/commands/new.ts`, `src/commands/new.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Separate input parsing/validation from applying defaults for cleaner code
+  - Commands that modify state should: parse input -> read store -> generate ID -> apply defaults -> validate -> write
 
 ---
 
