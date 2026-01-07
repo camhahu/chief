@@ -1,0 +1,345 @@
+{
+  "issues": [
+    {
+      "id": "f1a0b2",
+      "title": "Project scaffolding and core utilities",
+      "parent": null,
+      "done": false,
+      "labels": ["infra"],
+      "context": "Foundation for the CLI. TypeScript with Bun, no CLI framework. Set up the core read/write/validate logic that all commands depend on.",
+      "criteria": [
+        "Running 'chief init && chief new {\"title\":\"test\"} && chief list' works end-to-end",
+        "Invalid JSON input prints error to stderr and exits 1",
+        "chief --help prints usage for all commands"
+      ],
+      "notes": []
+    },
+    {
+      "id": "c3d4e5",
+      "title": "Initialize project structure",
+      "parent": "f1a0b2",
+      "done": false,
+      "labels": ["infra"],
+      "context": "TypeScript with Bun. No CLI framework - parse args manually. Single entry point.",
+      "criteria": [
+        "package.json with type: module and bin entry",
+        "tsconfig.json configured",
+        "src/index.ts as entry point",
+        "bun run build produces working binary"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a7b8c9",
+      "title": "Core JSON read/write utilities",
+      "parent": "f1a0b2",
+      "done": false,
+      "labels": ["backend"],
+      "context": "Shared utilities for loading .issues/issues.json, writing it back with consistent formatting, and finding the file (walk up directory tree).",
+      "criteria": [
+        "Function to locate .issues/issues.json from cwd or parent dirs",
+        "Function to read and parse the file",
+        "Function to write with consistent 2-space indent formatting",
+        "Errors if file not found (except for init)"
+      ],
+      "notes": []
+    },
+    {
+      "id": "d1e2f3",
+      "title": "ID generation utility",
+      "parent": "f1a0b2",
+      "done": false,
+      "labels": ["backend"],
+      "context": "Generate 6-character hex IDs. Must check for collisions against existing IDs.",
+      "criteria": [
+        "Generates random 6-char hex string",
+        "Checks against existing IDs and regenerates on collision",
+        "Uses crypto-secure randomness"
+      ],
+      "notes": []
+    },
+    {
+      "id": "e4f5a6",
+      "title": "Validation logic",
+      "parent": "f1a0b2",
+      "done": false,
+      "labels": ["backend"],
+      "context": "Enforce schema rules before writing. Reject invalid mutations.",
+      "criteria": [
+        "Validates all required fields present on issues",
+        "Validates parent references existing issue or is null",
+        "Validates parent is not itself a child (max 1 level nesting)",
+        "Validates no self-referential parent",
+        "Returns clear error messages"
+      ],
+      "notes": []
+    },
+    {
+      "id": "b2c3d4",
+      "title": "chief init",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Creates .issues/issues.json with empty issues array. Entry point for new projects.",
+      "criteria": [
+        "Running in empty dir creates .issues/issues.json",
+        "Running again is idempotent (no error, no change)",
+        "Prints path to created/existing file"
+      ],
+      "notes": []
+    },
+    {
+      "id": "f6a7b8",
+      "title": "chief new",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Core command for creating issues. Accepts JSON, applies defaults, generates ID.",
+      "criteria": [
+        "chief new '{\"title\":\"foo\"}' creates issue and prints ID",
+        "chief new with no args prompts for title, opens $EDITOR",
+        "Created issue appears in chief list output"
+      ],
+      "notes": []
+    },
+    {
+      "id": "c9d0e1",
+      "title": "chief new with JSON argument",
+      "parent": "f6a7b8",
+      "done": false,
+      "labels": ["feature"],
+      "context": "chief new '{\"title\": \"...\"}' - parse JSON, apply defaults, append to issues array.",
+      "criteria": [
+        "Parses JSON from first positional argument",
+        "Generates unique 6-char hex ID",
+        "Applies defaults: parent=null, done=false, labels=[], context=\"\", criteria=[], notes=[]",
+        "Validates parent reference if provided",
+        "Appends to issues array",
+        "Prints created issue ID"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a2b3c4",
+      "title": "chief new interactive mode",
+      "parent": "f6a7b8",
+      "done": false,
+      "labels": ["feature"],
+      "context": "When no argument provided, prompt for title then open $EDITOR for full JSON.",
+      "criteria": [
+        "Prompts for title if no argument",
+        "Creates template JSON with title filled in",
+        "Opens $EDITOR with template",
+        "Parses result and creates issue",
+        "Handles editor cancellation gracefully"
+      ],
+      "notes": []
+    },
+    {
+      "id": "d5e6f7",
+      "title": "chief done",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Mark an issue complete. Simple field update.",
+      "criteria": [
+        "Accepts issue ID as argument",
+        "Sets done: true for matching issue",
+        "Fails with error if ID not found",
+        "Prints confirmation"
+      ],
+      "notes": []
+    },
+    {
+      "id": "b8c9d0",
+      "title": "chief reopen",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Mark a done issue as incomplete again.",
+      "criteria": [
+        "Accepts issue ID as argument",
+        "Sets done: false for matching issue",
+        "Fails with error if ID not found",
+        "Prints confirmation"
+      ],
+      "notes": []
+    },
+    {
+      "id": "e1f2a3",
+      "title": "chief remove",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Delete an issue and its children recursively.",
+      "criteria": [
+        "chief remove <id> deletes issue from list",
+        "If issue has children, deletes them too and prints what was removed",
+        "Unknown ID prints error to stderr and exits 1"
+      ],
+      "notes": []
+    },
+    {
+      "id": "f4a5b6",
+      "title": "chief note",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Append timestamped notes to an issue.",
+      "criteria": [
+        "chief note <id> 'text' appends timestamped note",
+        "chief note <id> with no text opens $EDITOR",
+        "Note appears in chief show <id> output with date prefix"
+      ],
+      "notes": []
+    },
+    {
+      "id": "c7d8e9",
+      "title": "chief note with text argument",
+      "parent": "f4a5b6",
+      "done": false,
+      "labels": ["feature"],
+      "context": "chief note <id> \"text\" - append timestamped note inline.",
+      "criteria": [
+        "Accepts ID and text as arguments",
+        "Prepends current date (YYYY-MM-DD format)",
+        "Appends to notes array",
+        "Fails if ID not found"
+      ],
+      "notes": []
+    },
+    {
+      "id": "a0b1c2",
+      "title": "chief note interactive mode",
+      "parent": "f4a5b6",
+      "done": false,
+      "labels": ["feature"],
+      "context": "chief note <id> with no text opens $EDITOR for longer notes.",
+      "criteria": [
+        "Opens $EDITOR if no text argument",
+        "Prepends date to result",
+        "Appends to notes array",
+        "Handles empty/cancelled editor gracefully"
+      ],
+      "notes": []
+    },
+    {
+      "id": "d3e4f5",
+      "title": "chief criteria",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Add or remove acceptance criteria from an issue.",
+      "criteria": [
+        "--add <text> appends to criteria array",
+        "--rm <index> removes by index",
+        "Fails if ID not found",
+        "Fails if index out of bounds for --rm"
+      ],
+      "notes": []
+    },
+    {
+      "id": "b6c7d8",
+      "title": "chief label",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Add or remove labels from an issue.",
+      "criteria": [
+        "--add <label> appends to labels if not present",
+        "--rm <label> removes from labels (no-op if not present)",
+        "Fails if ID not found"
+      ],
+      "notes": []
+    },
+    {
+      "id": "e9f0a1",
+      "title": "chief edit",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Open a single issue in $EDITOR for full editing.",
+      "criteria": [
+        "chief edit <id> opens issue JSON in $EDITOR",
+        "Saving valid JSON updates the issue",
+        "Saving invalid JSON re-opens editor with error message",
+        "Changing ID in editor is rejected"
+      ],
+      "notes": []
+    },
+    {
+      "id": "g1h2i3",
+      "title": "chief list",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Display all issues in a readable format. Primary way to view project state.",
+      "criteria": [
+        "chief list shows all issues with ID, title, done status",
+        "Child issues indented under parents",
+        "Labels shown inline",
+        "Done issues visually distinguished (strikethrough or dimmed)"
+      ],
+      "notes": []
+    },
+    {
+      "id": "h3i4j5",
+      "title": "chief show",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Display full details of a single issue.",
+      "criteria": [
+        "chief show <id> prints all fields of the issue",
+        "Shows context, criteria, notes, labels",
+        "Shows children if any",
+        "Unknown ID prints error to stderr and exits 1"
+      ],
+      "notes": []
+    },
+    {
+      "id": "i5j6k7",
+      "title": "chief status",
+      "parent": null,
+      "done": false,
+      "labels": ["feature"],
+      "context": "Quick overview of project health.",
+      "criteria": [
+        "Shows count of open vs done issues",
+        "Shows count by label",
+        "Single line summary suitable for shell prompt"
+      ],
+      "notes": []
+    },
+    {
+      "id": "j7k8l9",
+      "title": "CLI help and error handling",
+      "parent": null,
+      "done": false,
+      "labels": ["infra"],
+      "context": "Consistent UX for help text and errors across all commands.",
+      "criteria": [
+        "chief --help lists all commands with one-line descriptions",
+        "chief <cmd> --help shows detailed usage for that command",
+        "All errors print to stderr and exit 1",
+        "Unknown commands print 'unknown command' and suggest --help"
+      ],
+      "notes": []
+    },
+    {
+      "id": "k9l0m1",
+      "title": "install.sh script",
+      "parent": null,
+      "done": false,
+      "labels": ["infra"],
+      "context": "One-liner install via curl | bash. Downloads binary for user's platform from GitHub releases.",
+      "criteria": [
+        "curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash works",
+        "Detects OS (darwin/linux/windows) and arch (x64/arm64)",
+        "Downloads correct binary from GitHub releases",
+        "Adds to PATH if not already present"
+      ],
+      "notes": []
+    }
+  ]
+}
