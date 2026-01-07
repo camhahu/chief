@@ -1,10 +1,25 @@
 # AGENTS.md
 
-- Always use Bun (never npm, pnpm, etc.)
+## Bun
+
+- Always use Bun (never npm, pnpm, yarn, etc.)
+- `bun add <pkg>` for dependencies
+- `bun add -d <pkg>` for dev dependencies
 - Use Bun standard library instead of Node standard library where possible
+
+## Commands
+
+- `bun run typecheck` - Run TypeScript type checking
+- `bun run test` - Run integration tests
+
+## Code Style
+
 - No barrel exports
 - Never add `--json` output flags to CLI commands
 - No fallback logic - each piece of code should do one thing, one way
+
+## Testing
+
 - No unit tests, only integration tests
 - After completing a new feature, manually test it and add integration test coverage
 - When fixing a bug, first add a test case that reproduces the issue, then fix the bug
