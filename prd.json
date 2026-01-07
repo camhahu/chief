@@ -242,7 +242,7 @@
       "id": "k9l0m1",
       "title": "install.sh script",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["infra"],
       "context": "One-liner install via curl | bash. Downloads binary for user's platform from GitHub releases.",
       "criteria": [

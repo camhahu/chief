@@ -2,7 +2,7 @@
 
 - When verifying PRD tasks, check progress.txt for prior completions - work may have been done as part of another task
 - Use `findIssueOrExit(store, id)` from store.ts when a command needs to find an issue by ID and exit if not found
-
+- Install scripts: use `set -euo pipefail`, detect OS/arch with `uname -s/-m`, prefer curl with wget fallback
 - Use `Bun.file(path).exists()` for existence checks (async)
 - Use `Bun.$` shell for filesystem operations in tests
 - Walk up directory tree using `dirname()` until `parent === dir` (root)
@@ -20,6 +20,17 @@
 - Test stderr output with `Bun.spawn` + pipe stderr, then read with `new Response(proc.stderr).text()`
 - Use `new Date().toISOString()` for ISO 8601 timestamps (includes timezone Z suffix)
 - When adding optional fields to an existing type, update all places that create objects of that type (tests, defaults, validation)
+
+---
+
+## 2026-01-07 - k9l0m1
+
+- Created install.sh for one-liner install via `curl | bash`
+- Files changed: `install.sh` (new), `prd.json`
+- **Learnings:**
+  - OS detection: `uname -s` returns Darwin/Linux/MINGW*, `uname -m` returns x86_64/arm64
+  - Use `${HOME}/.local/bin` as default install dir (XDG-ish, avoids sudo)
+  - Check PATH with grep and suggest export line if not present
 
 ---
 
