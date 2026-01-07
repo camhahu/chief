@@ -37,13 +37,15 @@ switch (command) {
     }
     break
   case 'list': {
+    const hasAll = args.includes('--all')
     const hasOpen = args.includes('--open')
     const hasDone = args.includes('--done')
     if (hasOpen && hasDone) {
       console.error('Error: --open and --done are mutually exclusive')
       process.exit(1)
     }
-    let filter: ListFilter = 'all'
+    let filter: ListFilter = 'open'
+    if (hasAll) filter = 'all'
     if (hasOpen) filter = 'open'
     if (hasDone) filter = 'done'
 

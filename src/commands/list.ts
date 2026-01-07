@@ -15,17 +15,13 @@ function formatIssue(issue: Issue, indent: string = ''): string {
   return issue.done ? `${indent}${DIM}${line}${RESET}` : `${indent}${line}`
 }
 
-function matchesStatus(issue: Issue, filter: ListFilter): boolean {
-  if (filter === 'all') return true
-  if (filter === 'open') return !issue.done
-  return issue.done
+function matchesFilter(issue: Issue, filter: ListFilter, label?: string): boolean {
+  const statusMatch = filter === 'all' || (filter === 'open' ? !issue.done : issue.done)
+  const labelMatch = !label || issue.labels.includes(label)
+  return statusMatch && labelMatch
 }
 
-function matchesLabel(issue: Issue, label: string | undefined): boolean {
-  return !label || issue.labels.includes(label)
-}
-
-export async function list(options: ListOptions = { filter: 'all' }): Promise<void> {
+export async function list(options: ListOptions = { filter: 'open' }): Promise<void> {
   const { filter, label } = options
 
   let store
@@ -58,10 +54,8 @@ export async function list(options: ListOptions = { filter: 'all' }): Promise<vo
 
   for (const parent of parents) {
     const children = childrenByParent.get(parent.id) ?? []
-    const matchingChildren = children.filter(
-      (c) => matchesStatus(c, filter) && matchesLabel(c, label)
-    )
-    const parentMatches = matchesStatus(parent, filter) && matchesLabel(parent, label)
+    const matchingChildren = children.filter((c) => matchesFilter(c, filter, label))
+    const parentMatches = matchesFilter(parent, filter, label)
 
     if (!parentMatches && matchingChildren.length === 0) continue
 

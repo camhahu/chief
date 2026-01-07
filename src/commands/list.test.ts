@@ -65,7 +65,7 @@ test('chief list distinguishes done issues', async () => {
   content.issues[0].done = true
   await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list`.cwd(TEST_DIR).text()
+  const listResult = await $`bun run ${CLI} list --all`.cwd(TEST_DIR).text()
   expect(listResult).toContain('[x]')
   expect(listResult).toContain(id)
 })
@@ -240,4 +240,38 @@ test('chief list --label shows "No issues" when no matches', async () => {
     .cwd(TEST_DIR)
     .text()
   expect(listResult.trim()).toBe('No issues')
+})
+
+test('chief list hides done issues by default', async () => {
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const doneId = doneResult.trim()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
+  content.issues[idx].done = true
+  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+
+  const listResult = await $`bun run ${CLI} list`.cwd(TEST_DIR).text()
+  expect(listResult).toContain('Open task')
+  expect(listResult).not.toContain('Done task')
+})
+
+test('chief list --all shows both open and done issues', async () => {
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const doneId = doneResult.trim()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
+  content.issues[idx].done = true
+  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+
+  const listResult = await $`bun run ${CLI} list --all`.cwd(TEST_DIR).text()
+  expect(listResult).toContain('Open task')
+  expect(listResult).toContain('Done task')
 })

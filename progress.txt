@@ -32,6 +32,17 @@
 
 ---
 
+## 2026-01-08 - b28c9d
+
+- Changed `chief list` to hide completed issues by default
+- Added `--all` flag to show all issues (previous default behavior)
+- Files changed: `src/commands/list.ts`, `src/index.ts`, `src/help.ts`, `src/commands/list.test.ts`, `prd.json`
+- **Learnings:**
+  - When changing default behavior, update existing tests that relied on old defaults
+  - Flag priority: explicit flags override defaults, `--all` overrides `--open`
+
+---
+
 ## 2026-01-08 - a17b8c
 
 - Enabled clearing/changing parent with `chief update <id> '{"parent":...}'`
