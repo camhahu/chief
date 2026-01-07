@@ -13,6 +13,16 @@
 
 ---
 
+## 2026-01-07 - b8c9d0
+
+- Implemented `chief reopen` command in `src/commands/reopen.ts`
+- Files changed: `src/commands/reopen.ts`, `src/commands/reopen.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Inverse operations (done/reopen) can share the same pattern with minimal differences
+  - Reopen is idempotent just like done - reopening an open issue succeeds silently
+
+---
+
 ## 2026-01-07 - d5e6f7
 
 - Implemented `chief done` command in `src/commands/done.ts`

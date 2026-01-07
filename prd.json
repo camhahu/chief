@@ -154,7 +154,7 @@
       "id": "b8c9d0",
       "title": "chief reopen",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Mark a done issue as incomplete again.",
       "criteria": [
