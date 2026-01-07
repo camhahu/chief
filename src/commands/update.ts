@@ -1,4 +1,4 @@
-import { readIssues, writeIssues, type Issue } from '../store.ts'
+import { readIssues, writeIssues, findIssueOrExit, type Issue } from '../store.ts'
 import { validateIssueFields, validateParentRef, ValidationError } from '../validate.ts'
 
 function parseUpdateInput(json: string): Partial<Issue> {
@@ -15,7 +15,7 @@ function parseUpdateInput(json: string): Partial<Issue> {
   return parsed as Partial<Issue>
 }
 
-export async function update(id: string, jsonArg: string): Promise<void> {
+export async function update(idPrefix: string, jsonArg: string): Promise<void> {
   let updates: Partial<Issue>
   try {
     updates = parseUpdateInput(jsonArg)
@@ -31,12 +31,7 @@ export async function update(id: string, jsonArg: string): Promise<void> {
   }
 
   const store = await readIssues()
-
-  const issue = store.issues.find((i) => i.id === id)
-  if (!issue) {
-    console.error(`Issue ${id} not found`)
-    process.exit(1)
-  }
+  const issue = findIssueOrExit(store, idPrefix)
 
   if ('title' in updates) issue.title = updates.title!
   if ('parent' in updates) issue.parent = updates.parent!
@@ -59,5 +54,5 @@ export async function update(id: string, jsonArg: string): Promise<void> {
 
   await writeIssues(store)
 
-  console.log(`Updated ${id}`)
+  console.log(`Updated ${issue.id}`)
 }

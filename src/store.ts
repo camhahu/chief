@@ -43,7 +43,6 @@ export async function findIssuesPath(
 
     const parent = dirname(dir)
     if (parent === dir) {
-      // Reached filesystem root
       return null
     }
     dir = parent
@@ -74,11 +73,21 @@ export async function writeIssues(
   await Bun.write(path, json)
 }
 
-export function findIssueOrExit(store: IssuesStore, id: string): Issue {
-  const issue = store.issues.find((i) => i.id === id)
-  if (!issue) {
-    console.error(`Issue ${id} not found`)
+export function findIssueOrExit(store: IssuesStore, idPrefix: string): Issue {
+  const matches = store.issues.filter((i) => i.id.startsWith(idPrefix))
+
+  if (matches.length === 0) {
+    console.error(`Issue ${idPrefix} not found`)
     process.exit(1)
   }
-  return issue
+
+  if (matches.length > 1) {
+    console.error(`Ambiguous ID prefix '${idPrefix}' matches:`)
+    for (const match of matches) {
+      console.error(`  ${match.id} - ${match.title}`)
+    }
+    process.exit(1)
+  }
+
+  return matches[0]!
 }

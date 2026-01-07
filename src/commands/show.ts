@@ -9,9 +9,9 @@ function formatList(items: string[]): string {
   return items.map((item) => `  - ${item}`).join('\n')
 }
 
-export async function show(id: string): Promise<void> {
+export async function show(idPrefix: string): Promise<void> {
   const store = await readIssues()
-  const issue = findIssueOrExit(store, id)
+  const issue = findIssueOrExit(store, idPrefix)
 
   const status = issue.done ? `${GREEN}done${RESET}` : 'open'
   const parent = issue.parent
@@ -52,7 +52,7 @@ export async function show(id: string): Promise<void> {
     console.log(formatList(issue.notes))
   }
 
-  const children = store.issues.filter((i) => i.parent === id)
+  const children = store.issues.filter((i) => i.parent === issue.id)
   if (children.length > 0) {
     console.log('')
     console.log(`${DIM}Children:${RESET}`)

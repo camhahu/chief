@@ -7,13 +7,13 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-export async function note(id: string, text: string): Promise<void> {
+export async function note(idPrefix: string, text: string): Promise<void> {
   const store = await readIssues()
-  const issue = findIssueOrExit(store, id)
+  const issue = findIssueOrExit(store, idPrefix)
 
   const timestampedNote = `${formatDate(new Date())}: ${text}`
   issue.notes.push(timestampedNote)
   await writeIssues(store)
 
-  console.log(`Added note to ${id}`)
+  console.log(`Added note to ${issue.id}`)
 }

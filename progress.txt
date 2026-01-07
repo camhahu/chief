@@ -1,7 +1,7 @@
 # Reusable Patterns
 
 - When verifying PRD tasks, check progress.txt for prior completions - work may have been done as part of another task
-- Use `findIssueOrExit(store, id)` from store.ts when a command needs to find an issue by ID and exit if not found
+- Use `findIssueOrExit(store, idPrefix)` from store.ts when a command needs to find an issue by ID prefix and exit if not found (supports partial ID matching)
 - Install scripts: use `set -euo pipefail`, detect OS/arch with `uname -s/-m`, prefer curl with wget fallback
 - Use `Bun.file(path).exists()` for existence checks (async)
 - Use `Bun.$` shell for filesystem operations in tests
@@ -22,6 +22,18 @@
 - When adding optional fields to an existing type, update all places that create objects of that type (tests, defaults, validation)
 
 - For idempotent state-change commands: check current state, return early with appropriate message, skip write
+- For prefix matching: filter by `startsWith`, handle 0 matches (not found), 1 match (success), >1 matches (ambiguous error listing all matches)
+
+---
+
+## 2026-01-07 - aa1b2c
+
+- Implemented ID prefix matching for all commands that take an issue ID
+- Files changed: `src/store.ts`, `src/commands/done.ts`, `src/commands/reopen.ts`, `src/commands/remove.ts`, `src/commands/show.ts`, `src/commands/note.ts`, `src/commands/update.ts`, `src/store.test.ts`, `src/commands/show.test.ts`
+- **Learnings:**
+  - Use `filter` + `startsWith` for prefix matching, check length for exact/ambiguous handling
+  - Update commands to use resolved `issue.id` instead of input parameter after prefix resolution
+  - The `update.ts` command was not using `findIssueOrExit` - refactored to use it for consistency
 
 ---
 

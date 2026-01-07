@@ -330,8 +330,8 @@
       "id": "aa1b2c",
       "title": "Support ID prefix matching",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-07T00:00:00.000Z",
       "labels": ["fix"],
       "context": "Currently requires full 6-char ID for all commands. Typing full IDs is tedious when a 2-3 char prefix would be unambiguous.",
       "criteria": [

@@ -1,8 +1,9 @@
 import { readIssues, writeIssues, findIssueOrExit } from '../store.ts'
 
-export async function remove(id: string): Promise<void> {
+export async function remove(idPrefix: string): Promise<void> {
   const store = await readIssues()
-  findIssueOrExit(store, id)
+  const issue = findIssueOrExit(store, idPrefix)
+  const id = issue.id
 
   const childIds = store.issues.filter((i) => i.parent === id).map((i) => i.id)
   const idsToRemove = new Set([id, ...childIds])

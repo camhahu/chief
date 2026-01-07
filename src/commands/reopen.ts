@@ -1,8 +1,8 @@
 import { readIssues, writeIssues, findIssueOrExit } from '../store.ts'
 
-export async function reopen(id: string): Promise<void> {
+export async function reopen(idPrefix: string): Promise<void> {
   const store = await readIssues()
-  const issue = findIssueOrExit(store, id)
+  const issue = findIssueOrExit(store, idPrefix)
 
   if (!issue.done) {
     console.log(`Already open`)
@@ -13,5 +13,5 @@ export async function reopen(id: string): Promise<void> {
   issue.doneAt = null
   await writeIssues(store)
 
-  console.log(`Reopened ${id}`)
+  console.log(`Reopened ${issue.id}`)
 }

@@ -5,7 +5,9 @@ import {
   findIssuesPath,
   readIssues,
   writeIssues,
+  findIssueOrExit,
   IssuesNotFoundError,
+  type IssuesStore,
 } from './store.ts'
 
 const TEST_DIR = join(import.meta.dir, '..', '.testfiles', 'store-test')
@@ -76,12 +78,9 @@ test('writeIssues saves with 2-space indent and trailing newline', async () => {
     join(TEST_DIR, '.issues', 'issues.json')
   ).text()
 
-  // Verify 2-space indentation
   expect(content).toContain('  "issues"')
   expect(content).toContain('    {')
-  // Verify trailing newline
   expect(content.endsWith('\n')).toBe(true)
-  // Verify content parses back correctly
   expect(JSON.parse(content)).toEqual(store)
 })
 
@@ -91,4 +90,43 @@ test('writeIssues throws IssuesNotFoundError when file missing', async () => {
   expect(writeIssues({ issues: [] }, TEST_DIR)).rejects.toBeInstanceOf(
     IssuesNotFoundError
   )
+})
+
+const makeIssue = (id: string, title: string) => ({
+  id,
+  title,
+  parent: null,
+  done: false,
+  doneAt: null,
+  labels: [],
+  context: '',
+  criteria: [],
+  notes: [],
+})
+
+test('findIssueOrExit matches exact ID', () => {
+  const store: IssuesStore = {
+    issues: [makeIssue('abc123', 'Test Issue')],
+  }
+  const issue = findIssueOrExit(store, 'abc123')
+  expect(issue.id).toBe('abc123')
+})
+
+test('findIssueOrExit matches ID prefix', () => {
+  const store: IssuesStore = {
+    issues: [makeIssue('abc123', 'Test Issue')],
+  }
+  const issue = findIssueOrExit(store, 'ab')
+  expect(issue.id).toBe('abc123')
+})
+
+test('findIssueOrExit matches single-char prefix', () => {
+  const store: IssuesStore = {
+    issues: [
+      makeIssue('abc123', 'First'),
+      makeIssue('def456', 'Second'),
+    ],
+  }
+  const issue = findIssueOrExit(store, 'd')
+  expect(issue.id).toBe('def456')
 })
