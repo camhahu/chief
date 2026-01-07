@@ -4,6 +4,19 @@
 - Use `Bun.$` shell for filesystem operations in tests
 - Walk up directory tree using `dirname()` until `parent === dir` (root)
 - Use `crypto.getRandomValues(new Uint8Array(n))` for crypto-secure random bytes
+- Use type guards with `unknown` for runtime validation (return `x is Type` pattern)
+- Use `as const` for compile-time tuple inference on required field arrays
+
+---
+
+## 2026-01-07 - e4f5a6
+
+- Implemented validation logic in `src/validate.ts`
+- Files changed: `src/validate.ts`, `src/validate.test.ts`, `prd.json`
+- **Learnings:**
+  - Validation functions should throw descriptive errors, not return booleans
+  - Type guard pattern (`function f(x: unknown): x is Type`) provides runtime validation with type narrowing
+  - Separate field validation from referential integrity checks for cleaner testing
 
 ---
 

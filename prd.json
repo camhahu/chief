@@ -62,7 +62,7 @@
       "id": "e4f5a6",
       "title": "Validation logic",
       "parent": "f1a0b2",
-      "done": false,
+      "done": true,
       "labels": ["backend"],
       "context": "Enforce schema rules before writing. Reject invalid mutations.",
       "criteria": [
