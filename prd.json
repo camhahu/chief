@@ -316,7 +316,7 @@
       "id": "y4z5a6",
       "title": "Clean up help text",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["refactor"],
       "context": "Help text currently lists commands that don't exist (criteria, label, edit, status).",
       "criteria": [
@@ -324,7 +324,7 @@
         "Add update command to --help output",
         "Verify all listed commands actually work"
       ],
-      "notes": []
+      "notes": ["2026-01-07: Already completed as part of j7k8l9"]
     }
   ]
 }

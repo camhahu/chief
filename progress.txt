@@ -1,5 +1,7 @@
 # Reusable Patterns
 
+- When verifying PRD tasks, check progress.txt for prior completions - work may have been done as part of another task
+
 - Use `Bun.file(path).exists()` for existence checks (async)
 - Use `Bun.$` shell for filesystem operations in tests
 - Walk up directory tree using `dirname()` until `parent === dir` (root)
@@ -15,6 +17,17 @@
 - Test stderr output with `Bun.spawn` + pipe stderr, then read with `new Response(proc.stderr).text()`
 - Use `new Date().toISOString()` for ISO 8601 timestamps (includes timezone Z suffix)
 - When adding optional fields to an existing type, update all places that create objects of that type (tests, defaults, validation)
+
+---
+
+## 2026-01-07 - y4z5a6
+
+- Verified help text cleanup task was already completed as part of j7k8l9
+- All acceptance criteria met: no non-existent commands, update command present, all commands work
+- Files changed: `prd.json` (mark done)
+- **Learnings:**
+  - Tasks can be implicitly completed as part of other work - verify before implementing
+  - The j7k8l9 progress entry documented this: "Removed non-existent commands from help"
 
 ---
 
