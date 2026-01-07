@@ -361,8 +361,8 @@
       "id": "cc3d4e",
       "title": "Add --label flag to list",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["fix"],
       "context": "Labels exist but can't filter by them. Makes labels less useful for organizing work.",
       "criteria": [

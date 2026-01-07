@@ -46,7 +46,10 @@ switch (command) {
     let filter: ListFilter = 'all'
     if (hasOpen) filter = 'open'
     if (hasDone) filter = 'done'
-    await list(filter)
+
+    const labelArg = args.find((a) => a.startsWith('--label='))
+    const label = labelArg?.slice('--label='.length)
+    await list({ filter, label })
     break
   }
   case 'done':

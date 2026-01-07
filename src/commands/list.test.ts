@@ -167,3 +167,77 @@ test('chief list --open filters children when parent matches', async () => {
   expect(listResult).toContain('Open child')
   expect(listResult).not.toContain('Done child')
 })
+
+test('chief list --label=bug shows only issues with bug label', async () => {
+  await $`bun run ${CLI} new '{"title":"Bug issue","labels":["bug"]}'`
+    .cwd(TEST_DIR)
+    .quiet()
+  await $`bun run ${CLI} new '{"title":"Feature issue","labels":["feature"]}'`
+    .cwd(TEST_DIR)
+    .quiet()
+  await $`bun run ${CLI} new '{"title":"No label issue"}'`.cwd(TEST_DIR).quiet()
+
+  const listResult = await $`bun run ${CLI} list --label=bug`
+    .cwd(TEST_DIR)
+    .text()
+  expect(listResult).toContain('Bug issue')
+  expect(listResult).not.toContain('Feature issue')
+  expect(listResult).not.toContain('No label issue')
+})
+
+test('chief list --label combines with --open', async () => {
+  await $`bun run ${CLI} new '{"title":"Open bug","labels":["bug"]}'`
+    .cwd(TEST_DIR)
+    .quiet()
+  const doneBugResult =
+    await $`bun run ${CLI} new '{"title":"Done bug","labels":["bug"]}'`
+      .cwd(TEST_DIR)
+      .text()
+  const doneBugId = doneBugResult.trim()
+  await $`bun run ${CLI} new '{"title":"Open feature","labels":["feature"]}'`
+    .cwd(TEST_DIR)
+    .quiet()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const idx = content.issues.findIndex(
+    (i: { id: string }) => i.id === doneBugId
+  )
+  content.issues[idx].done = true
+  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+
+  const listResult = await $`bun run ${CLI} list --label=bug --open`
+    .cwd(TEST_DIR)
+    .text()
+  expect(listResult).toContain('Open bug')
+  expect(listResult).not.toContain('Done bug')
+  expect(listResult).not.toContain('Open feature')
+})
+
+test('chief list --label shows parent if child matches', async () => {
+  const parentResult =
+    await $`bun run ${CLI} new '{"title":"Parent without label"}'`
+      .cwd(TEST_DIR)
+      .text()
+  const parentId = parentResult.trim()
+
+  await $`bun run ${CLI} new ${JSON.stringify({ title: 'Child with bug label', parent: parentId, labels: ['bug'] })}`
+    .cwd(TEST_DIR)
+    .quiet()
+
+  const listResult = await $`bun run ${CLI} list --label=bug`
+    .cwd(TEST_DIR)
+    .text()
+  expect(listResult).toContain('Parent without label')
+  expect(listResult).toContain('Child with bug label')
+})
+
+test('chief list --label shows "No issues" when no matches', async () => {
+  await $`bun run ${CLI} new '{"title":"Feature issue","labels":["feature"]}'`
+    .cwd(TEST_DIR)
+    .quiet()
+
+  const listResult = await $`bun run ${CLI} list --label=bug`
+    .cwd(TEST_DIR)
+    .text()
+  expect(listResult.trim()).toBe('No issues')
+})

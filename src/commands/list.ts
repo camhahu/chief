@@ -3,6 +3,11 @@ import { RESET, DIM, GREEN } from '../color.ts'
 
 export type ListFilter = 'all' | 'open' | 'done'
 
+export interface ListOptions {
+  filter: ListFilter
+  label?: string
+}
+
 function formatIssue(issue: Issue, indent: string = ''): string {
   const status = issue.done ? `${GREEN}[x]${RESET}` : '[ ]'
   const labels = issue.labels.length > 0 ? ` [${issue.labels.join(', ')}]` : ''
@@ -10,13 +15,19 @@ function formatIssue(issue: Issue, indent: string = ''): string {
   return issue.done ? `${indent}${DIM}${line}${RESET}` : `${indent}${line}`
 }
 
-function matches(issue: Issue, filter: ListFilter): boolean {
+function matchesStatus(issue: Issue, filter: ListFilter): boolean {
   if (filter === 'all') return true
   if (filter === 'open') return !issue.done
   return issue.done
 }
 
-export async function list(filter: ListFilter = 'all'): Promise<void> {
+function matchesLabel(issue: Issue, label: string | undefined): boolean {
+  return !label || issue.labels.includes(label)
+}
+
+export async function list(options: ListOptions = { filter: 'all' }): Promise<void> {
+  const { filter, label } = options
+
   let store
   try {
     store = await readIssues()
@@ -46,15 +57,19 @@ export async function list(filter: ListFilter = 'all'): Promise<void> {
   let printed = false
 
   for (const parent of parents) {
-    if (!matches(parent, filter)) continue
+    const children = childrenByParent.get(parent.id) ?? []
+    const matchingChildren = children.filter(
+      (c) => matchesStatus(c, filter) && matchesLabel(c, label)
+    )
+    const parentMatches = matchesStatus(parent, filter) && matchesLabel(parent, label)
+
+    if (!parentMatches && matchingChildren.length === 0) continue
 
     console.log(formatIssue(parent))
     printed = true
 
-    for (const child of childrenByParent.get(parent.id) ?? []) {
-      if (matches(child, filter)) {
-        console.log(formatIssue(child, '  '))
-      }
+    for (const child of matchingChildren) {
+      console.log(formatIssue(child, '  '))
     }
   }
 
