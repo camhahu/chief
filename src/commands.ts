@@ -8,7 +8,7 @@ import { show } from './commands/show.ts'
 import { note } from './commands/note.ts'
 import { update } from './commands/update.ts'
 
-interface Command {
+export interface Command {
   usage: string
   description: string
   handler: (args: string[]) => Promise<void>

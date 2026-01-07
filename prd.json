@@ -540,8 +540,8 @@
       "id": "c9f3a4",
       "title": "Type-safe command handlers",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["refactor"],
       "context": "Command handlers have inconsistent signatures. Some return Promise<void>, some implicitly return. Args passed as individual strings rather than parsed objects.",
       "criteria": [
@@ -549,7 +549,7 @@
         "Handler signatures match a common Command interface",
         "Enables future additions like middleware (logging, timing)"
       ],
-      "notes": []
+      "notes": ["2026-01-08: Most of this was already implemented as part of c39dae (command registry). Exported Command interface for external use."]
     }
   ]
 }

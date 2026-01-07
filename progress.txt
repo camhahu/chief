@@ -46,6 +46,15 @@
 
 ---
 
+## 2026-01-08 - c9f3a4
+
+- Exported `Command` interface from commands.ts
+- Files changed: `src/commands.ts`
+- **Learnings:**
+  - Task was largely completed as part of c39dae (command registry extraction)
+
+---
+
 ## 2026-01-08 - a7d1e2
 
 - Removed all `node:path` and `node:fs/promises` imports
