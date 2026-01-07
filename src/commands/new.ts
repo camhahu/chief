@@ -39,6 +39,7 @@ export async function newIssue(jsonArg: string): Promise<void> {
     title: input.title!,
     parent: input.parent ?? null,
     done: input.done ?? false,
+    doneAt: input.doneAt ?? null,
     labels: input.labels ?? [],
     context: input.context ?? '',
     criteria: input.criteria ?? [],

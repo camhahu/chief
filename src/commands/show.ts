@@ -31,6 +31,10 @@ export async function show(id: string): Promise<void> {
   console.log(formatSection('ID', issue.id))
   console.log(formatSection('Status', status))
 
+  if (issue.doneAt) {
+    console.log(formatSection('Completed', issue.doneAt))
+  }
+
   if (issue.labels.length > 0) {
     console.log(formatSection('Labels', issue.labels.join(', ')))
   }

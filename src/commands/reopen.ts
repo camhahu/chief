@@ -10,6 +10,7 @@ export async function reopen(id: string): Promise<void> {
   }
 
   issue.done = false
+  issue.doneAt = null
   await writeIssues(store)
 
   console.log(`Reopened ${id}`)

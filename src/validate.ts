@@ -30,6 +30,10 @@ export function validateIssueFields(issue: unknown): issue is Issue {
     throw new ValidationError('Issue done must be a boolean')
   }
 
+  if (obj.doneAt !== null && typeof obj.doneAt !== 'string') {
+    throw new ValidationError('Issue doneAt must be null or a string')
+  }
+
   if (!Array.isArray(obj.labels)) {
     throw new ValidationError('Issue labels must be an array')
   }

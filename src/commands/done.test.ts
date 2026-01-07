@@ -30,6 +30,23 @@ test('chief done marks issue as done', async () => {
   expect(content.issues[0].done).toBe(true)
 })
 
+test('chief done sets doneAt timestamp', async () => {
+  const createResult = await $`bun run ${CLI} new '{"title":"test issue"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const id = createResult.trim()
+
+  const before = new Date().toISOString()
+  await $`bun run ${CLI} done ${id}`.cwd(TEST_DIR).quiet()
+  const after = new Date().toISOString()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const doneAt = content.issues[0].doneAt
+  expect(typeof doneAt).toBe('string')
+  expect(doneAt >= before).toBe(true)
+  expect(doneAt <= after).toBe(true)
+})
+
 test('chief done fails with unknown ID', async () => {
   const result = await $`bun run ${CLI} done nonexistent`.cwd(TEST_DIR).nothrow()
 

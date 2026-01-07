@@ -10,6 +10,7 @@ export async function done(id: string): Promise<void> {
   }
 
   issue.done = true
+  issue.doneAt = new Date().toISOString()
   await writeIssues(store)
 
   console.log(`Marked ${id} as done`)

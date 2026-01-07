@@ -12,6 +12,7 @@ export interface Issue {
   title: string
   parent: string | null
   done: boolean
+  doneAt: string | null
   labels: string[]
   context: string
   criteria: string[]

@@ -14,6 +14,7 @@ function makeIssue(overrides: Partial<Issue> = {}): Issue {
     title: 'Test issue',
     parent: null,
     done: false,
+    doneAt: null,
     labels: [],
     context: '',
     criteria: [],
@@ -69,6 +70,22 @@ describe('validateIssueFields', () => {
     expect(() =>
       validateIssueFields({ ...makeIssue(), done: 'yes' })
     ).toThrow('done must be a boolean')
+  })
+
+  test('accepts null doneAt', () => {
+    expect(validateIssueFields(makeIssue({ doneAt: null }))).toBe(true)
+  })
+
+  test('accepts string doneAt', () => {
+    expect(
+      validateIssueFields(makeIssue({ doneAt: '2026-01-07T12:00:00.000Z' }))
+    ).toBe(true)
+  })
+
+  test('rejects invalid doneAt', () => {
+    expect(() =>
+      validateIssueFields({ ...makeIssue(), doneAt: 123 })
+    ).toThrow('doneAt must be null or a string')
   })
 
   test('rejects invalid labels', () => {

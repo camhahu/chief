@@ -93,6 +93,28 @@ test('chief show displays done status', async () => {
   expect(result).toContain('done')
 })
 
+test('chief show displays doneAt when present', async () => {
+  const createResult = await $`bun run ${CLI} new '{"title":"Done issue"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const id = createResult.trim()
+
+  await $`bun run ${CLI} done ${id}`.cwd(TEST_DIR).quiet()
+
+  const result = await $`bun run ${CLI} show ${id}`.cwd(TEST_DIR).text()
+  expect(result).toContain('Completed:')
+})
+
+test('chief show does not display doneAt for open issues', async () => {
+  const createResult = await $`bun run ${CLI} new '{"title":"Open issue"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const id = createResult.trim()
+
+  const result = await $`bun run ${CLI} show ${id}`.cwd(TEST_DIR).text()
+  expect(result).not.toContain('Completed:')
+})
+
 test('chief show fails for unknown ID', async () => {
   const result = await $`bun run ${CLI} show abcdef`.cwd(TEST_DIR).nothrow()
 

@@ -13,6 +13,18 @@
 - Date formatting: `String(n).padStart(2, '0')` for zero-padded numbers
 - For CLI help: use a `Record<string, CommandHelp>` object with usage, description, args, examples for each command
 - Test stderr output with `Bun.spawn` + pipe stderr, then read with `new Response(proc.stderr).text()`
+- Use `new Date().toISOString()` for ISO 8601 timestamps (includes timezone Z suffix)
+- When adding optional fields to an existing type, update all places that create objects of that type (tests, defaults, validation)
+
+---
+
+## 2026-01-07 - p5q6r7
+
+- Implemented `doneAt` timestamp field for tracking when issues are completed
+- Files changed: `src/store.ts`, `src/commands/done.ts`, `src/commands/reopen.ts`, `src/commands/show.ts`, `src/commands/new.ts`, `src/validate.ts`, tests
+- **Learnings:**
+  - Adding a new field requires updates to: type definition, validation, defaults in new command, and all test fixtures
+  - Backward compatibility works because existing issues without the field get it added on first mutation
 
 ---
 

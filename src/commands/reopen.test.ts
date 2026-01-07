@@ -32,6 +32,23 @@ test('chief reopen sets done to false', async () => {
   expect(content.issues[0].done).toBe(false)
 })
 
+test('chief reopen clears doneAt to null', async () => {
+  const createResult = await $`bun run ${CLI} new '{"title":"test issue"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const id = createResult.trim()
+
+  await $`bun run ${CLI} done ${id}`.cwd(TEST_DIR).quiet()
+
+  const beforeReopen = await Bun.file(ISSUES_PATH).json()
+  expect(beforeReopen.issues[0].doneAt).not.toBeNull()
+
+  await $`bun run ${CLI} reopen ${id}`.cwd(TEST_DIR).quiet()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  expect(content.issues[0].doneAt).toBeNull()
+})
+
 test('chief reopen fails with unknown ID', async () => {
   const result = await $`bun run ${CLI} reopen nonexistent`.cwd(TEST_DIR).nothrow()
 

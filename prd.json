@@ -273,7 +273,7 @@
       "id": "p5q6r7",
       "title": "Add doneAt timestamp",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Record when issues are completed for tracking velocity and history.",
       "criteria": [

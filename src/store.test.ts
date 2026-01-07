@@ -61,6 +61,7 @@ test('writeIssues saves with 2-space indent and trailing newline', async () => {
         title: 'Test Issue',
         parent: null,
         done: false,
+        doneAt: null,
         labels: ['bug'],
         context: 'Some context',
         criteria: ['Works'],
