@@ -286,7 +286,7 @@
       "id": "h3i4j5",
       "title": "chief show",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Display full details of a single issue.",
       "criteria": [

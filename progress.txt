@@ -13,6 +13,16 @@
 
 ---
 
+## 2026-01-07 - h3i4j5
+
+- Implemented `chief show` command in `src/commands/show.ts`
+- Files changed: `src/commands/show.ts`, `src/commands/show.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Read-only detail commands: find by ID -> format all fields -> print sections conditionally
+  - Use ANSI `\x1b[1m` for bold headers to make output scannable
+
+---
+
 ## 2026-01-07 - e1f2a3
 
 - Implemented `chief remove` command in `src/commands/remove.ts`

@@ -6,6 +6,7 @@ import { list } from './commands/list.ts'
 import { done } from './commands/done.ts'
 import { reopen } from './commands/reopen.ts'
 import { remove } from './commands/remove.ts'
+import { show } from './commands/show.ts'
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -82,6 +83,14 @@ switch (command) {
       await remove(args[1])
     } else {
       console.error('Usage: chief remove <id>')
+      process.exit(1)
+    }
+    break
+  case 'show':
+    if (args[1]) {
+      await show(args[1])
+    } else {
+      console.error('Usage: chief show <id>')
       process.exit(1)
     }
     break
