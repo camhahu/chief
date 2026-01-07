@@ -112,6 +112,77 @@ test('chief update validates parent reference', async () => {
   expect(result.stderr.toString()).toContain('does not exist')
 })
 
+test('chief update can clear parent (promote to top-level)', async () => {
+  const parentResult = await $`bun run ${CLI} new '{"title":"parent"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const parentId = parentResult.trim()
+
+  const childResult = await $`bun run ${CLI} new '{"title":"child","parent":"${parentId}"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const childId = childResult.trim()
+
+  const result = await $`bun run ${CLI} update ${childId} '{"parent":null}'`
+    .cwd(TEST_DIR)
+    .text()
+  expect(result.trim()).toBe(`Updated ${childId}`)
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const child = content.issues.find((i: { id: string }) => i.id === childId)
+  expect(child.parent).toBeNull()
+})
+
+test('chief update can change parent to different issue', async () => {
+  const parent1Result = await $`bun run ${CLI} new '{"title":"parent1"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const parent1Id = parent1Result.trim()
+
+  const parent2Result = await $`bun run ${CLI} new '{"title":"parent2"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const parent2Id = parent2Result.trim()
+
+  const childResult = await $`bun run ${CLI} new '{"title":"child","parent":"${parent1Id}"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const childId = childResult.trim()
+
+  const result = await $`bun run ${CLI} update ${childId} '{"parent":"${parent2Id}"}'`
+    .cwd(TEST_DIR)
+    .text()
+  expect(result.trim()).toBe(`Updated ${childId}`)
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const child = content.issues.find((i: { id: string }) => i.id === childId)
+  expect(child.parent).toBe(parent2Id)
+})
+
+test('chief update prevents issue with children from becoming a child', async () => {
+  const grandparentResult = await $`bun run ${CLI} new '{"title":"grandparent"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const grandparentId = grandparentResult.trim()
+
+  const parentResult = await $`bun run ${CLI} new '{"title":"parent"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const parentId = parentResult.trim()
+
+  await $`bun run ${CLI} new '{"title":"child","parent":"${parentId}"}'`
+    .cwd(TEST_DIR)
+    .quiet()
+
+  const result = await $`bun run ${CLI} update ${parentId} '{"parent":"${grandparentId}"}'`
+    .cwd(TEST_DIR)
+    .nothrow()
+
+  expect(result.exitCode).toBe(1)
+  expect(result.stderr.toString()).toContain('has children')
+  expect(result.stderr.toString()).toContain('Max 1 level of nesting')
+})
+
 test('chief update fails without arguments', async () => {
   const result = await $`bun run ${CLI} update`.cwd(TEST_DIR).nothrow()
 

@@ -28,6 +28,18 @@
 - For CLI flags: use `args.includes('--flag')` to detect, export filter type from command module for type safety
 - For `--key=value` flags: use `args.find(a => a.startsWith('--key='))?.slice('--key='.length)`
 - When filtering hierarchical data with parent/child: compute child matches first, show parent if it matches OR if any child matches (provides context)
+- When validating parent changes, check both directions: target parent cannot be a child AND issue cannot have children if becoming a child
+
+---
+
+## 2026-01-08 - a17b8c
+
+- Enabled clearing/changing parent with `chief update <id> '{"parent":...}'`
+- Added validation to prevent issues with children from becoming children (would create >1 level nesting)
+- Files changed: `src/validate.ts`, `src/validate.test.ts`, `src/commands/update.test.ts`, `prd.json`
+- **Learnings:**
+  - Parent field already supported in update, but nesting validation was incomplete
+  - Must check both directions: parent cannot be child AND issue cannot have children
 
 ---
 

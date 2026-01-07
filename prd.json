@@ -420,8 +420,8 @@
       "id": "a17b8c",
       "title": "Allow clearing parent with update",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["fix"],
       "context": "Can set parent when creating issue but can't change it later. Can't promote a child to top-level or move between parents.",
       "criteria": [

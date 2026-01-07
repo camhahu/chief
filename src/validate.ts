@@ -91,6 +91,13 @@ export function validateParentRef(
       `Parent ${issue.parent} is itself a child issue. Max 1 level of nesting allowed.`
     )
   }
+
+  const hasChildren = existingIssues.some((i) => i.parent === issue.id)
+  if (hasChildren) {
+    throw new ValidationError(
+      `Issue ${issue.id} has children and cannot become a child. Max 1 level of nesting allowed.`
+    )
+  }
 }
 
 export function validateStore(store: IssuesStore): void {

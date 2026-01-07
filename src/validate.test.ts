@@ -151,6 +151,17 @@ describe('validateParentRef', () => {
       validateParentRef(child, [grandparent, parent])
     ).toThrow('Max 1 level of nesting allowed')
   })
+
+  test('rejects issue with children becoming a child', () => {
+    const grandparent = makeIssue({ id: 'gp1' })
+    const parent = makeIssue({ id: 'parent1' })
+    const child = makeIssue({ id: 'child1', parent: 'parent1' })
+    const updatedParent = makeIssue({ id: 'parent1', parent: 'gp1' })
+
+    expect(() =>
+      validateParentRef(updatedParent, [grandparent, parent, child])
+    ).toThrow('has children')
+  })
 })
 
 describe('validateStore', () => {
