@@ -180,7 +180,7 @@ test('chief update fails without arguments', async () => {
   const result = await $`bun run ${CLI} update`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('Usage:')
+  expect(result.stderr.toString()).toContain("missing required argument 'id'")
 })
 
 test('chief update warns on unknown fields but still applies valid fields', async () => {

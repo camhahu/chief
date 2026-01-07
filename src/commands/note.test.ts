@@ -34,14 +34,14 @@ test('chief note fails without text argument', async () => {
   const result = await $`bun run ${CLI} note ${id}`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('Usage: chief note <id> <text>')
+  expect(result.stderr.toString()).toContain("missing required argument 'text'")
 })
 
 test('chief note fails without any arguments', async () => {
   const result = await $`bun run ${CLI} note`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('Usage: chief note <id> <text>')
+  expect(result.stderr.toString()).toContain("missing required argument 'id'")
 })
 
 test('chief note appends multiple notes', async () => {

@@ -1,3 +1,4 @@
+- Use Commander.js for CLI arg parsing - provides standardized flags, auto-generated help, and built-in version support
 - Issues are stored 1 per line for compact storage and clean git diffs: `{"issues": [\n{...issue1...},\n{...issue2...}\n]}`
 - When updating `done` field via update command, also update `doneAt` to maintain consistency with done/reopen commands
 - Use `resolveParentIdOrExit(store, parentIdPrefix)` from store.ts to resolve parent ID prefix to full ID (handles null passthrough)
@@ -51,6 +52,21 @@
 - Use `z.infer<typeof Schema>` to derive TypeScript types from Zod schemas
 - For Zod 4: use `z.core.$ZodError` type for error handling (not `z.ZodError`)
 - Format Zod errors by extracting `error.issues[0]` and mapping path/code to user-friendly messages
+
+---
+
+## 2026-01-08 - 9f6055
+
+- Refactored CLI to use Commander.js for argument parsing
+- Added commander@14 dependency
+- Removed manual arg parsing in commands.ts and help.ts (deleted both files)
+- Consolidated all command definitions in index.ts
+- Updated tests to match Commander's output format (e.g., "missing required argument 'id'" vs "Usage:")
+- Files changed: `src/index.ts`, `src/help.test.ts`, `src/commands/*.test.ts`, `package.json`, deleted `src/commands.ts`, `src/help.ts`
+- **Learnings:**
+  - Commander auto-generates help including version flag (-V/--version)
+  - Error messages differ from manual parsing: "unknown command 'x'" vs "Unknown command: x"
+  - Running with no args exits with error (code 1), outputs help to stderr
 
 ---
 

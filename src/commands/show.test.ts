@@ -115,7 +115,7 @@ test('chief show without ID prints usage', async () => {
   const result = await $`bun run ${CLI} show`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('Usage:')
+  expect(result.stderr.toString()).toContain("missing required argument 'id'")
 })
 
 test('chief show formats multiline notes with consistent indentation', async () => {

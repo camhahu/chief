@@ -28,7 +28,7 @@ test('chief remove fails without ID argument', async () => {
   const result = await $`bun run ${CLI} remove`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('Usage: chief remove <id>')
+  expect(result.stderr.toString()).toContain("missing required argument 'id'")
 })
 
 test('chief remove deletes children recursively', async () => {

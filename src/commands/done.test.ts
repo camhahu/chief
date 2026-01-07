@@ -64,5 +64,5 @@ test('chief done fails without ID argument', async () => {
   const result = await $`bun run ${CLI} done`.cwd(testDir).quiet().nothrow()
 
   expect(result.exitCode).toBe(1)
-  expect(result.stderr.toString()).toContain('Usage: chief done <id>')
+  expect(result.stderr.toString()).toContain("missing required argument 'id'")
 })
