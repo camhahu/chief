@@ -78,7 +78,7 @@
       "id": "b2c3d4",
       "title": "chief init",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Creates .issues/issues.json with empty issues array. Entry point for new projects.",
       "criteria": [

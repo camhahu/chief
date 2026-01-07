@@ -4,6 +4,9 @@ const ISSUES_DIR = '.issues'
 const ISSUES_FILE = 'issues.json'
 const ISSUES_PATH = join(ISSUES_DIR, ISSUES_FILE)
 
+export const ISSUES_DIR_IN_CWD = join(process.cwd(), ISSUES_DIR)
+export const ISSUES_PATH_IN_CWD = join(process.cwd(), ISSUES_PATH)
+
 export interface Issue {
   id: string
   title: string
@@ -80,18 +83,4 @@ export async function writeIssues(
 
   const json = JSON.stringify(store, null, 2) + '\n'
   await Bun.write(path, json)
-}
-
-/**
- * Get the path where issues.json should be created (in cwd)
- */
-export function getInitPath(): string {
-  return join(process.cwd(), ISSUES_PATH)
-}
-
-/**
- * Get the directory where .issues should be created (in cwd)
- */
-export function getInitDir(): string {
-  return join(process.cwd(), ISSUES_DIR)
 }

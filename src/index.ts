@@ -1,5 +1,7 @@
 #!/usr/bin/env bun
 
+import { init } from './commands/init.ts'
+
 const args = process.argv.slice(2)
 const command = args[0]
 
@@ -39,4 +41,10 @@ if (!command || command === '--help' || command === '-h') {
   process.exit(0)
 }
 
-printUnknownCommand(command)
+switch (command) {
+  case 'init':
+    await init()
+    break
+  default:
+    printUnknownCommand(command)
+}

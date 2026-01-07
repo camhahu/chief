@@ -6,6 +6,18 @@
 - Use `crypto.getRandomValues(new Uint8Array(n))` for crypto-secure random bytes
 - Use type guards with `unknown` for runtime validation (return `x is Type` pattern)
 - Use `as const` for compile-time tuple inference on required field arrays
+- CLI tests need absolute paths when running from different cwd - use `join(import.meta.dir, '..', '..')` to get project root
+
+---
+
+## 2026-01-07 - b2c3d4
+
+- Implemented `chief init` command in `src/commands/init.ts`
+- Files changed: `src/commands/init.ts`, `src/commands/init.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Integration tests running CLI from different cwd need absolute paths to the CLI entry point
+  - Use `mkdir` with `recursive: true` to create parent directories idempotently
+  - Commands should be organized in `src/commands/` directory and imported into index.ts
 
 ---
 
