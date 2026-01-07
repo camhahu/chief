@@ -227,7 +227,7 @@
       "id": "j7k8l9",
       "title": "CLI help and error handling",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["infra"],
       "context": "Consistent UX for help text and errors across all commands.",
       "criteria": [

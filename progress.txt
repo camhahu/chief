@@ -11,6 +11,19 @@
 - Use nullish coalescing (`??`) for applying defaults to optional fields
 - ANSI escape codes: `\x1b[2m` for dim, `\x1b[32m` for green, `\x1b[0m` to reset
 - Date formatting: `String(n).padStart(2, '0')` for zero-padded numbers
+- For CLI help: use a `Record<string, CommandHelp>` object with usage, description, args, examples for each command
+- Test stderr output with `Bun.spawn` + pipe stderr, then read with `new Response(proc.stderr).text()`
+
+---
+
+## 2026-01-07 - j7k8l9
+
+- Implemented CLI help and error handling in `src/help.ts` and `src/index.ts`
+- Files changed: `src/help.ts`, `src/help.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Centralize help definitions in a separate module with structured data
+  - Check for --help flag before switch statement to avoid code duplication in each case
+  - Removed non-existent commands from help (criteria, label, edit, status were listed but not implemented)
 
 ---
 
