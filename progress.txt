@@ -13,6 +13,16 @@
 
 ---
 
+## 2026-01-07 - e1f2a3
+
+- Implemented `chief remove` command in `src/commands/remove.ts`
+- Files changed: `src/commands/remove.ts`, `src/commands/remove.test.ts`, `src/index.ts`, `prd.json`
+- **Learnings:**
+  - Collect IDs to remove using Set for efficient deletion
+  - Use filter with Set.has for bulk removal from array
+
+---
+
 ## 2026-01-07 - b8c9d0
 
 - Implemented `chief reopen` command in `src/commands/reopen.ts`

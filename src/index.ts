@@ -5,6 +5,7 @@ import { newIssue } from './commands/new.ts'
 import { list } from './commands/list.ts'
 import { done } from './commands/done.ts'
 import { reopen } from './commands/reopen.ts'
+import { remove } from './commands/remove.ts'
 
 const args = process.argv.slice(2)
 const command = args[0]
@@ -73,6 +74,14 @@ switch (command) {
       await reopen(args[1])
     } else {
       console.error('Usage: chief reopen <id>')
+      process.exit(1)
+    }
+    break
+  case 'remove':
+    if (args[1]) {
+      await remove(args[1])
+    } else {
+      console.error('Usage: chief remove <id>')
       process.exit(1)
     }
     break

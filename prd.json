@@ -169,7 +169,7 @@
       "id": "e1f2a3",
       "title": "chief remove",
       "parent": null,
-      "done": false,
+      "done": true,
       "labels": ["feature"],
       "context": "Delete an issue and its children recursively.",
       "criteria": [
