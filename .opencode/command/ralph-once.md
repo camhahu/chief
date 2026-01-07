@@ -1,6 +1,7 @@
 ---
 description: Grab one task from the PRD and execute it
 subtask: false
+model: anthropic/claude-opus-4-5
 ---
 
 # Execute ONE Task from PRD
