@@ -391,8 +391,8 @@
       "id": "ee5f6a",
       "title": "Fix multiline note formatting in show",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["fix"],
       "context": "Notes with newlines break alignment in 'chief show' output. Lines after the first lose their indentation.",
       "criteria": [

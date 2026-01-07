@@ -29,6 +29,15 @@
 
 ---
 
+## 2026-01-08 - ee5f6a
+
+- Fixed multiline note formatting in `chief show` to maintain consistent indentation
+- Files changed: `src/commands/show.ts`, `src/commands/show.test.ts`, `prd.json`
+- **Learnings:**
+  - For multiline list items: split by newlines, prefix first line with `  - `, subsequent lines with `    ` (4 spaces to align with content after bullet)
+
+---
+
 ## 2026-01-08 - cc3d4e
 
 - Added --label flag to `chief list` for filtering issues by label

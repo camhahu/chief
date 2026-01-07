@@ -130,6 +130,24 @@ test('chief show without ID prints usage', async () => {
   expect(result.stderr.toString()).toContain('Usage:')
 })
 
+test('chief show formats multiline notes with consistent indentation', async () => {
+  const issueJson = JSON.stringify({
+    title: 'Multiline note test',
+    notes: ['2026-01-01: First line\nSecond line\nThird line'],
+  })
+
+  const createResult = await $`bun run ${CLI} new ${issueJson}`
+    .cwd(TEST_DIR)
+    .text()
+  const id = createResult.trim()
+
+  const result = await $`bun run ${CLI} show ${id}`.cwd(TEST_DIR).text()
+
+  expect(result).toContain('  - 2026-01-01: First line')
+  expect(result).toContain('    Second line')
+  expect(result).toContain('    Third line')
+})
+
 test('chief show matches ID prefix', async () => {
   const createResult = await $`bun run ${CLI} new '{"title":"Prefix test"}'`
     .cwd(TEST_DIR)
@@ -143,7 +161,6 @@ test('chief show matches ID prefix', async () => {
 })
 
 test('chief show fails with ambiguous prefix', async () => {
-  // Create two issues, then find a common prefix
   const result1 = await $`bun run ${CLI} new '{"title":"First"}'`
     .cwd(TEST_DIR)
     .text()
@@ -154,13 +171,11 @@ test('chief show fails with ambiguous prefix', async () => {
     .text()
   const id2 = result2.trim()
 
-  // Find how many characters they share at the start
   let commonLen = 0
   while (commonLen < id1.length && id1[commonLen] === id2[commonLen]) {
     commonLen++
   }
 
-  // If they share any prefix, test ambiguity; otherwise skip
   if (commonLen > 0) {
     const ambiguousPrefix = id1.slice(0, commonLen)
     const showResult = await $`bun run ${CLI} show ${ambiguousPrefix}`

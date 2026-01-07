@@ -6,7 +6,14 @@ function formatSection(label: string, content: string): string {
 }
 
 function formatList(items: string[]): string {
-  return items.map((item) => `  - ${item}`).join('\n')
+  return items
+    .map((item) => {
+      const lines = item.split('\n')
+      const first = `  - ${lines[0]}`
+      const rest = lines.slice(1).map((line) => `    ${line}`)
+      return [first, ...rest].join('\n')
+    })
+    .join('\n')
 }
 
 export async function show(idPrefix: string): Promise<void> {
