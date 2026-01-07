@@ -1,11 +1,15 @@
-import { dirname, join } from 'node:path'
-
 const ISSUES_DIR = '.issues'
 const ISSUES_FILE = 'issues.json'
-const ISSUES_PATH = join(ISSUES_DIR, ISSUES_FILE)
+const ISSUES_PATH = `${ISSUES_DIR}/${ISSUES_FILE}`
 
-export const ISSUES_DIR_IN_CWD = join(process.cwd(), ISSUES_DIR)
-export const ISSUES_PATH_IN_CWD = join(process.cwd(), ISSUES_PATH)
+export const ISSUES_PATH_IN_CWD = `${process.cwd()}/${ISSUES_PATH}`
+
+function dirname(path: string): string {
+  const lastSlash = path.lastIndexOf('/')
+  if (lastSlash === -1) return '.'
+  if (lastSlash === 0) return '/'
+  return path.slice(0, lastSlash)
+}
 
 export interface Issue {
   id: string
@@ -36,7 +40,7 @@ export async function findIssuesPath(
   let dir = startDir
 
   while (true) {
-    const issuesPath = join(dir, ISSUES_PATH)
+    const issuesPath = `${dir}/${ISSUES_PATH}`
     if (await Bun.file(issuesPath).exists()) {
       return issuesPath
     }

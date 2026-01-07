@@ -1,5 +1,4 @@
 import { expect, test } from 'bun:test'
-import { join } from 'node:path'
 import { $ } from 'bun'
 import { CLI, PROJECT_ROOT, setupTestDir } from '../test-helpers.ts'
 
@@ -59,7 +58,7 @@ test('chief list distinguishes done issues', async () => {
 })
 
 test('chief list fails without .issues directory', async () => {
-  const emptyDir = join(PROJECT_ROOT, '.testfiles', 'list-no-init')
+  const emptyDir = `${PROJECT_ROOT}/.testfiles/list-no-init`
   await $`rm -rf ${emptyDir}`.quiet()
   await $`mkdir -p ${emptyDir}`.quiet()
 

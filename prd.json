@@ -511,15 +511,15 @@
       "id": "a7d1e2",
       "title": "Remove node:path dependency",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-08T00:00:00.000Z",
       "labels": ["refactor"],
       "context": "Using node:path/join when Bun has path utilities. Minor inconsistency with the 'use Bun stdlib' principle.",
       "criteria": [
         "Replace node:path imports with Bun equivalents or template literals",
         "No node: imports remain except where Bun lacks equivalent"
       ],
-      "notes": []
+      "notes": ["2026-01-08: Also removed node:fs/promises by using Bun.write (creates parent dirs automatically)"]
     },
     {
       "id": "b8e2f3",

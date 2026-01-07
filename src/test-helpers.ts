@@ -1,10 +1,9 @@
 import { beforeEach, afterEach } from 'bun:test'
-import { join } from 'node:path'
 import { $ } from 'bun'
 
-export const PROJECT_ROOT = join(import.meta.dir, '..')
+export const PROJECT_ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '')
 
-export const CLI = join(PROJECT_ROOT, 'src', 'index.ts')
+export const CLI = `${PROJECT_ROOT}/src/index.ts`
 
 export interface TestContext {
   testDir: string
@@ -17,8 +16,8 @@ interface SetupOptions {
 }
 
 export function setupTestDir(name: string, options?: SetupOptions): TestContext {
-  const testDir = join(PROJECT_ROOT, '.testfiles', name)
-  const issuesPath = join(testDir, '.issues', 'issues.json')
+  const testDir = `${PROJECT_ROOT}/.testfiles/${name}`
+  const issuesPath = `${testDir}/.issues/issues.json`
   const shouldInit = options?.init ?? true
   const createIssuesDir = options?.createIssuesDir ?? false
 
@@ -26,7 +25,7 @@ export function setupTestDir(name: string, options?: SetupOptions): TestContext 
     await $`rm -rf ${testDir}`.quiet()
     await $`mkdir -p ${testDir}`.quiet()
     if (createIssuesDir) {
-      await $`mkdir -p ${join(testDir, '.issues')}`.quiet()
+      await $`mkdir -p ${testDir}/.issues`.quiet()
       await Bun.write(issuesPath, '{"issues":[]}\n')
     } else if (shouldInit) {
       await $`bun run ${CLI} init`.cwd(testDir).quiet()
