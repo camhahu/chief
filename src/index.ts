@@ -2,7 +2,7 @@
 
 import { init } from './commands/init.ts'
 import { newIssue } from './commands/new.ts'
-import { list } from './commands/list.ts'
+import { list, type ListFilter } from './commands/list.ts'
 import { done } from './commands/done.ts'
 import { reopen } from './commands/reopen.ts'
 import { remove } from './commands/remove.ts'
@@ -36,9 +36,19 @@ switch (command) {
       process.exit(1)
     }
     break
-  case 'list':
-    await list()
+  case 'list': {
+    const hasOpen = args.includes('--open')
+    const hasDone = args.includes('--done')
+    if (hasOpen && hasDone) {
+      console.error('Error: --open and --done are mutually exclusive')
+      process.exit(1)
+    }
+    let filter: ListFilter = 'all'
+    if (hasOpen) filter = 'open'
+    if (hasDone) filter = 'done'
+    await list(filter)
     break
+  }
   case 'done':
     if (args[1]) {
       await done(args[1])

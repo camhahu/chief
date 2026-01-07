@@ -23,6 +23,18 @@
 
 - For idempotent state-change commands: check current state, return early with appropriate message, skip write
 - For prefix matching: filter by `startsWith`, handle 0 matches (not found), 1 match (success), >1 matches (ambiguous error listing all matches)
+- For CLI flags: use `args.includes('--flag')` to detect, export filter type from command module for type safety
+
+---
+
+## 2026-01-07 - bb2c3d
+
+- Added --open and --done flags to `chief list` for filtering by completion status
+- Files changed: `src/commands/list.ts`, `src/commands/list.test.ts`, `src/index.ts`, `src/help.ts`, `prd.json`
+- **Learnings:**
+  - Export filter type (`ListFilter`) from command module for type safety when passing from index.ts
+  - When filtering parent/child hierarchy, show children only if parent matches filter (children follow parent's visibility)
+  - Print "No issues" when filter yields empty results, not just when store is empty
 
 ---
 

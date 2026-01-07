@@ -345,8 +345,8 @@
       "id": "bb2c3d",
       "title": "Add --open and --done flags to list",
       "parent": null,
-      "done": false,
-      "doneAt": null,
+      "done": true,
+      "doneAt": "2026-01-07T00:00:00.000Z",
       "labels": ["fix"],
       "context": "No way to filter list output. When you have many issues, seeing only open ones is essential. Currently flags are silently ignored.",
       "criteria": [

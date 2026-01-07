@@ -1,6 +1,8 @@
 import { readIssues, IssuesNotFoundError, type Issue } from '../store.ts'
 import { RESET, DIM, GREEN } from '../color.ts'
 
+export type ListFilter = 'all' | 'open' | 'done'
+
 function formatIssue(issue: Issue, indent: string = ''): string {
   const status = issue.done ? `${GREEN}[x]${RESET}` : '[ ]'
   const labels = issue.labels.length > 0 ? ` [${issue.labels.join(', ')}]` : ''
@@ -8,7 +10,13 @@ function formatIssue(issue: Issue, indent: string = ''): string {
   return issue.done ? `${indent}${DIM}${line}${RESET}` : `${indent}${line}`
 }
 
-export async function list(): Promise<void> {
+function matches(issue: Issue, filter: ListFilter): boolean {
+  if (filter === 'all') return true
+  if (filter === 'open') return !issue.done
+  return issue.done
+}
+
+export async function list(filter: ListFilter = 'all'): Promise<void> {
   let store
   try {
     store = await readIssues()
@@ -25,9 +33,7 @@ export async function list(): Promise<void> {
     return
   }
 
-  const parents = store.issues.filter((i) => i.parent === null)
   const childrenByParent = new Map<string, Issue[]>()
-
   for (const issue of store.issues) {
     if (issue.parent !== null) {
       const children = childrenByParent.get(issue.parent) ?? []
@@ -36,11 +42,23 @@ export async function list(): Promise<void> {
     }
   }
 
+  const parents = store.issues.filter((i) => i.parent === null)
+  let printed = false
+
   for (const parent of parents) {
+    if (!matches(parent, filter)) continue
+
     console.log(formatIssue(parent))
-    const children = childrenByParent.get(parent.id) ?? []
-    for (const child of children) {
-      console.log(formatIssue(child, '  '))
+    printed = true
+
+    for (const child of childrenByParent.get(parent.id) ?? []) {
+      if (matches(child, filter)) {
+        console.log(formatIssue(child, '  '))
+      }
     }
+  }
+
+  if (!printed) {
+    console.log('No issues')
   }
 }

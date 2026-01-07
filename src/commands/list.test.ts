@@ -5,6 +5,7 @@ import { $ } from 'bun'
 const PROJECT_ROOT = join(import.meta.dir, '..', '..')
 const TEST_DIR = join(PROJECT_ROOT, '.testfiles', 'list-test')
 const CLI = join(PROJECT_ROOT, 'src', 'index.ts')
+const ISSUES_PATH = join(TEST_DIR, '.issues', 'issues.json')
 
 beforeEach(async () => {
   await $`rm -rf ${TEST_DIR}`.quiet()
@@ -55,8 +56,6 @@ test('chief list indents children under parents', async () => {
 })
 
 test('chief list distinguishes done issues', async () => {
-  const ISSUES_PATH = join(TEST_DIR, '.issues', 'issues.json')
-
   const result = await $`bun run ${CLI} new '{"title":"Done task"}'`
     .cwd(TEST_DIR)
     .text()
@@ -82,4 +81,89 @@ test('chief list fails without .issues directory', async () => {
   expect(result.stderr.toString()).toContain('chief init')
 
   await $`rm -rf ${emptyDir}`.quiet()
+})
+
+test('chief list --open shows only open issues', async () => {
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const doneId = doneResult.trim()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
+  content.issues[idx].done = true
+  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+
+  const listResult = await $`bun run ${CLI} list --open`.cwd(TEST_DIR).text()
+  expect(listResult).toContain('Open task')
+  expect(listResult).not.toContain('Done task')
+})
+
+test('chief list --done shows only done issues', async () => {
+  await $`bun run ${CLI} new '{"title":"Open task"}'`.cwd(TEST_DIR).quiet()
+  const doneResult = await $`bun run ${CLI} new '{"title":"Done task"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const doneId = doneResult.trim()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const idx = content.issues.findIndex((i: { id: string }) => i.id === doneId)
+  content.issues[idx].done = true
+  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+
+  const listResult = await $`bun run ${CLI} list --done`.cwd(TEST_DIR).text()
+  expect(listResult).toContain('Done task')
+  expect(listResult).not.toContain('Open task')
+})
+
+test('chief list --open and --done are mutually exclusive', async () => {
+  const result = await $`bun run ${CLI} list --open --done`
+    .cwd(TEST_DIR)
+    .nothrow()
+
+  expect(result.exitCode).toBe(1)
+  expect(result.stderr.toString()).toContain('mutually exclusive')
+})
+
+test('chief list --open shows "No issues" when all are done', async () => {
+  const result = await $`bun run ${CLI} new '{"title":"Done task"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const id = result.trim()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  content.issues[0].done = true
+  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+
+  const listResult = await $`bun run ${CLI} list --open`.cwd(TEST_DIR).text()
+  expect(listResult.trim()).toBe('No issues')
+})
+
+test('chief list --open filters children when parent matches', async () => {
+  const parentResult = await $`bun run ${CLI} new '{"title":"Open parent"}'`
+    .cwd(TEST_DIR)
+    .text()
+  const parentId = parentResult.trim()
+
+  await $`bun run ${CLI} new ${JSON.stringify({ title: 'Open child', parent: parentId })}`
+    .cwd(TEST_DIR)
+    .quiet()
+  const doneChildResult =
+    await $`bun run ${CLI} new ${JSON.stringify({ title: 'Done child', parent: parentId })}`
+      .cwd(TEST_DIR)
+      .text()
+  const doneChildId = doneChildResult.trim()
+
+  const content = await Bun.file(ISSUES_PATH).json()
+  const idx = content.issues.findIndex(
+    (i: { id: string }) => i.id === doneChildId
+  )
+  content.issues[idx].done = true
+  await Bun.write(ISSUES_PATH, JSON.stringify(content, null, 2) + '\n')
+
+  const listResult = await $`bun run ${CLI} list --open`.cwd(TEST_DIR).text()
+  expect(listResult).toContain('Open parent')
+  expect(listResult).toContain('Open child')
+  expect(listResult).not.toContain('Done child')
 })

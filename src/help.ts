@@ -24,7 +24,7 @@ const commands: Record<string, { usage: string; description: string }> = {
     description: 'Add a note to an issue',
   },
   list: {
-    usage: 'chief list',
+    usage: 'chief list [--open | --done]',
     description: 'List all issues',
   },
   show: {
