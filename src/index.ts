@@ -10,6 +10,7 @@ import { remove } from './commands/remove.ts'
 import { show } from './commands/show.ts'
 import { note } from './commands/note.ts'
 import { update } from './commands/update.ts'
+import { addSkill, TARGETS } from './commands/add-skill.ts'
 
 const program = new Command()
 
@@ -93,5 +94,12 @@ program
   .argument('<id>', 'Issue ID or prefix')
   .argument('<json>', 'JSON object with fields to update')
   .action((id: string, json: string) => update(id, json))
+
+program
+  .command('add-skill')
+  .description('Install chief skill docs for AI agents')
+  .argument('<target>', `Target agent: ${TARGETS.join(', ')}`)
+  .option('--global', 'Install to user config instead of project')
+  .action((target: string, options: { global?: boolean }) => addSkill(target, options.global ?? false))
 
 program.parse()

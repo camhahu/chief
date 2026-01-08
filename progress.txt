@@ -52,6 +52,21 @@
 - Use `z.infer<typeof Schema>` to derive TypeScript types from Zod schemas
 - For Zod 4: use `z.core.$ZodError` type for error handling (not `z.ZodError`)
 - Format Zod errors by extracting `error.issues[0]` and mapping path/code to user-friendly messages
+- For fetching from GitHub with local fallback: check `Bun.file(localPath).exists()` first, then fetch from remote
+
+---
+
+## 2026-01-08 - dfd213
+
+- Added `chief add-skill <target>` command for installing skill docs to AI agent config dirs
+- Supports 8 targets: opencode, cursor, claude, amp, goose, github, vscode, codex
+- `--global` flag installs to user config instead of project (not available for github/vscode)
+- Fetches skill files from local repo if available, falls back to GitHub raw URLs
+- Creates directory structure: `skill/SKILL.md` and `skill/references/*.md`
+- Files changed: `src/commands/add-skill.ts`, `src/commands/add-skill.test.ts`, `src/index.ts`
+- **Learnings:**
+  - Use `new URL('../..', import.meta.url).pathname` to get project root for local file fallback
+  - Different agents use different path conventions: some use `.config/`, some use home dotfiles
 
 ---
 
