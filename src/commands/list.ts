@@ -68,6 +68,11 @@ export async function list(options: ListOptions = { filter: 'open' }): Promise<v
   }
 
   if (!printed) {
-    console.log('No issues')
+    const completed = store.issues.filter((i) => i.done).length
+    if (filter === 'open' && completed > 0) {
+      console.log(`No active issues (${completed} completed)`)
+    } else {
+      console.log('No issues')
+    }
   }
 }

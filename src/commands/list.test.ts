@@ -115,18 +115,18 @@ test('chief list filter flags are mutually exclusive', async () => {
   expect(result.stderr.toString()).toContain('mutually exclusive')
 })
 
-test('chief list --open shows "No issues" when all are done', async () => {
-  const result = await $`bun run ${CLI} new '{"title":"Done task"}'`
-    .cwd(testDir)
-    .text()
-  const id = result.trim()
+test('chief list shows completed count when all issues are done', async () => {
+  await $`bun run ${CLI} new '{"title":"Done task 1"}'`.cwd(testDir).quiet()
+  await $`bun run ${CLI} new '{"title":"Done task 2"}'`.cwd(testDir).quiet()
 
   const content = await Bun.file(issuesPath).json()
-  content.issues[0].done = true
+  for (const issue of content.issues) {
+    issue.done = true
+  }
   await Bun.write(issuesPath, JSON.stringify(content, null, 2) + '\n')
 
-  const listResult = await $`bun run ${CLI} list --open`.cwd(testDir).text()
-  expect(listResult.trim()).toBe('No issues')
+  const listResult = await $`bun run ${CLI} list`.cwd(testDir).text()
+  expect(listResult.trim()).toBe('No active issues (2 completed)')
 })
 
 test('chief list --open filters children when parent matches', async () => {

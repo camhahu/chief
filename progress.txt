@@ -55,6 +55,17 @@
 
 ---
 
+## 2026-01-08 - 21352a
+
+- Improved empty list message when completed issues exist
+- Now shows "No active issues (N completed)" instead of "No issues" when filter is 'open' and only completed issues exist
+- Still shows "No issues" when truly empty
+- Files changed: `src/commands/list.ts`, `src/commands/list.test.ts`
+- **Learnings:**
+  - Check total completed count when filtered results are empty to provide actionable feedback
+
+---
+
 ## 2026-01-08 - 7343b1
 
 - Made --all, --open, and --done flags mutually exclusive in `chief list`
