@@ -55,6 +55,19 @@
 
 ---
 
+## 2026-01-08 - de2eb5
+
+- Created skill documentation for AI agents
+- skill/SKILL.md with frontmatter, core workflow, command reference, and JSON schema
+- skill/references/planning.md for parent/child issue workflows
+- skill/references/labels.md for label-based filtering workflows
+- Files changed: `skill/SKILL.md`, `skill/references/planning.md`, `skill/references/labels.md`
+- **Learnings:**
+  - Follow browser repo pattern: SKILL.md with frontmatter + references/*.md for detailed use cases
+  - Use tables for field schemas and use case references
+
+---
+
 ## 2026-01-08 - 21352a
 
 - Improved empty list message when completed issues exist
