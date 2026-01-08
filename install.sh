@@ -49,10 +49,11 @@ main() {
 
   mkdir -p "${INSTALL_DIR}"
 
+  echo "Downloading chief..."
   if command -v curl &>/dev/null; then
-    curl -fsSL "${download_url}" -o "${binary_path}"
+    curl -fL --progress-bar "${download_url}" -o "${binary_path}"
   elif command -v wget &>/dev/null; then
-    wget -q "${download_url}" -O "${binary_path}"
+    wget --show-progress "${download_url}" -O "${binary_path}"
   else
     echo "Error: curl or wget required" >&2
     exit 1
