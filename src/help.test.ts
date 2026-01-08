@@ -36,6 +36,20 @@ test('chief <cmd> --help shows usage', async () => {
   expect(result).toContain('Create a new issue')
 })
 
+test('chief new --help shows field schema', async () => {
+  const result = await $`bun run ${CLI} new --help`.text()
+
+  expect(result).toContain('Fields:')
+  expect(result).toContain('title')
+  expect(result).toContain('(required)')
+  expect(result).toContain('labels')
+  expect(result).toContain('string[]')
+  expect(result).toContain('context')
+  expect(result).toContain('criteria')
+  expect(result).toContain('parent')
+  expect(result).toContain('notes')
+})
+
 test('chief <cmd> -h is alias for --help', async () => {
   const result = await $`bun run ${CLI} done -h`.text()
 

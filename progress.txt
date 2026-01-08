@@ -527,6 +527,18 @@
 
 ---
 
+## 2026-01-08 - 2c617d
+
+- Added field schema documentation to `chief new --help` output
+- Uses Commander.js `.addHelpText('after', ...)` to append schema info
+- Shows all available fields with types and required/optional indicators
+- Files changed: `src/index.ts`, `src/help.test.ts`
+- **Learnings:**
+  - Commander.js `.addHelpText('after', text)` appends content after default help
+  - Align field types with fixed-width columns for readability
+
+---
+
 ## 2026-01-08 - eb5b2a
 
 - Made `chief init` print "Already initialized" when `.issues/issues.json` already exists

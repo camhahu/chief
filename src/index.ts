@@ -24,6 +24,17 @@ program
   .command('new')
   .description('Create a new issue from JSON')
   .argument('<json>', 'JSON object with issue data')
+  .addHelpText(
+    'after',
+    `
+Fields:
+  title       string    (required) Issue title
+  labels      string[]  Category tags, e.g. ["bug", "feature"]
+  context     string    Background information
+  criteria    string[]  Acceptance criteria
+  parent      string    Parent issue ID for subtasks
+  notes       string[]  Additional notes`
+  )
   .action((json: string) => newIssue(json))
 
 program
