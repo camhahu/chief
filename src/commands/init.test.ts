@@ -20,7 +20,7 @@ test('chief init is idempotent', async () => {
 
   const result = await $`bun run ${CLI} init`.cwd(testDir).text()
 
-  expect(result.trim()).toBe(`${testDir}/.issues/issues.json`)
+  expect(result.trim()).toBe(`Already initialized\n${testDir}/.issues/issues.json`)
 
   const content = await Bun.file(`${testDir}/.issues/issues.json`).text()
   expect(JSON.parse(content)).toEqual({ issues: [{ id: 'abc123' }] })

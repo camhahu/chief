@@ -515,3 +515,10 @@
   - `Bun.$` shell template provides clean syntax for filesystem ops in tests
 
 ---
+
+## 2026-01-08 - eb5b2a
+
+- Made `chief init` print "Already initialized" when `.issues/issues.json` already exists
+- Files changed: `src/commands/init.ts`, `src/commands/init.test.ts`
+
+---
