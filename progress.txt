@@ -55,6 +55,18 @@
 
 ---
 
+## 2026-01-08 - 522baa
+
+- Replaced boilerplate README with proper documentation
+- Install via curl | bash, quick start workflow, command reference table, contributing section
+- Links to skill/SKILL.md for AI agent integration
+- Files changed: `README.md`
+- **Learnings:**
+  - Acceptance criteria provide clear structure: one-liner install, quick example, command reference, contributing
+  - Existing skill/SKILL.md had good content to reference rather than duplicate
+
+---
+
 ## 2026-01-08 - de2eb5
 
 - Created skill documentation for AI agents
