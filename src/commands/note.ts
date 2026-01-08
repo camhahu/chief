@@ -1,4 +1,5 @@
-import { readIssues, writeIssues, findIssueOrExit } from '../store.ts'
+import { readIssues, writeIssues, findIssue } from '../store.ts'
+import { findIssueOrExit } from '../validate.ts'
 
 function formatDate(date: Date): string {
   const year = date.getFullYear()
@@ -9,7 +10,7 @@ function formatDate(date: Date): string {
 
 export async function note(idPrefix: string, text: string): Promise<void> {
   const store = await readIssues()
-  const issue = findIssueOrExit(store, idPrefix)
+  const issue = findIssueOrExit(findIssue(store, idPrefix))
 
   const timestampedNote = `${formatDate(new Date())}: ${text}`
   issue.notes.push(timestampedNote)

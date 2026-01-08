@@ -5,7 +5,7 @@ import {
   findIssuesPath,
   readIssues,
   writeIssues,
-  findIssueOrExit,
+  findIssue,
   IssuesNotFoundError,
   type IssuesStore,
 } from './store.ts'
@@ -94,29 +94,44 @@ const makeIssue = (id: string, title: string) => ({
   notes: [],
 })
 
-test('findIssueOrExit matches exact ID', () => {
+test('findIssue returns issue for exact ID', () => {
+  const issue = makeIssue('abc123', 'Test Issue')
+  const store: IssuesStore = { issues: [issue] }
+  const result = findIssue(store, 'abc123')
+  expect(result).toEqual({ issue })
+})
+
+test('findIssue returns issue for ID prefix', () => {
+  const issue = makeIssue('abc123', 'Test Issue')
+  const store: IssuesStore = { issues: [issue] }
+  const result = findIssue(store, 'ab')
+  expect(result).toEqual({ issue })
+})
+
+test('findIssue returns issue for single-char prefix', () => {
+  const first = makeIssue('abc123', 'First')
+  const second = makeIssue('def456', 'Second')
+  const store: IssuesStore = { issues: [first, second] }
+  const result = findIssue(store, 'd')
+  expect(result).toEqual({ issue: second })
+})
+
+test('findIssue returns not-found error when no match', () => {
   const store: IssuesStore = {
     issues: [makeIssue('abc123', 'Test Issue')],
   }
-  const issue = findIssueOrExit(store, 'abc123')
-  expect(issue.id).toBe('abc123')
+  const result = findIssue(store, 'xyz')
+  expect(result).toEqual({ error: 'not-found', idPrefix: 'xyz' })
 })
 
-test('findIssueOrExit matches ID prefix', () => {
-  const store: IssuesStore = {
-    issues: [makeIssue('abc123', 'Test Issue')],
-  }
-  const issue = findIssueOrExit(store, 'ab')
-  expect(issue.id).toBe('abc123')
-})
-
-test('findIssueOrExit matches single-char prefix', () => {
-  const store: IssuesStore = {
-    issues: [
-      makeIssue('abc123', 'First'),
-      makeIssue('def456', 'Second'),
-    ],
-  }
-  const issue = findIssueOrExit(store, 'd')
-  expect(issue.id).toBe('def456')
+test('findIssue returns ambiguous error when multiple matches', () => {
+  const first = makeIssue('abc123', 'First')
+  const second = makeIssue('abc456', 'Second')
+  const store: IssuesStore = { issues: [first, second] }
+  const result = findIssue(store, 'ab')
+  expect(result).toEqual({
+    error: 'ambiguous',
+    idPrefix: 'ab',
+    matches: [first, second],
+  })
 })

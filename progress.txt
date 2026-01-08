@@ -1,7 +1,7 @@
 - Use Commander.js for CLI arg parsing - provides standardized flags, auto-generated help, and built-in version support
 - Issues are stored 1 per line for compact storage and clean git diffs: `{"issues": [\n{...issue1...},\n{...issue2...}\n]}`
 - When updating `done` field via update command, also update `doneAt` to maintain consistency with done/reopen commands
-- Use `resolveParentIdOrExit(store, parentIdPrefix)` from store.ts to resolve parent ID prefix to full ID (handles null passthrough)
+- Use `resolveParentId(store, parentIdPrefix)` from store.ts to get result, then `resolveParentIdOrExit(result)` from validate.ts to handle exit
 
 # Reusable Patterns
 
@@ -13,7 +13,7 @@
 - Define valid fields as a simple array, use `filter` + `!includes` to detect unknown fields
 
 - When verifying tasks, check progress.txt for prior completions - work may have been done as part of another task
-- Use `findIssueOrExit(store, idPrefix, label?)` from store.ts when a command needs to find an issue by ID prefix and exit if not found (supports partial ID matching, optional label for error messages)
+- Use `findIssue(store, idPrefix)` from store.ts to get result, then `findIssueOrExit(result, label?)` from validate.ts to handle exit (supports partial ID matching)
 - Install scripts: use `set -euo pipefail`, detect OS/arch with `uname -s/-m`, prefer curl with wget fallback
 - Use `Bun.file(path).exists()` for existence checks (async)
 - Use `Bun.$` shell for filesystem operations in tests
@@ -520,5 +520,19 @@
 
 - Made `chief init` print "Already initialized" when `.issues/issues.json` already exists
 - Files changed: `src/commands/init.ts`, `src/commands/init.test.ts`
+
+---
+
+## 2026-01-08 - 82c234
+
+- Separated process.exit from store logic for better testability
+- `findIssue(store, idPrefix)` now returns `{ issue } | { error: 'not-found' } | { error: 'ambiguous', matches }`
+- `resolveParentId(store, prefix)` returns `{ parentId } | { error: 'not-found' } | { error: 'ambiguous', matches }`
+- Exit handlers moved to validate.ts: `findIssueOrExit(result)` and `resolveParentIdOrExit(result)`
+- Files changed: `src/store.ts`, `src/validate.ts`, `src/store.test.ts`, `src/commands/show.ts`, `src/commands/done.ts`, `src/commands/note.ts`, `src/commands/remove.ts`, `src/commands/reopen.ts`, `src/commands/update.ts`, `src/commands/new.ts`
+- **Learnings:**
+  - Returning discriminated unions enables callers to handle errors differently (test vs CLI)
+  - Keep I/O (console.error, process.exit) out of pure logic modules for testability
+  - Pattern: `findIssueOrExit(findIssue(store, idPrefix))` composes pure lookup with exit handler
 
 ---

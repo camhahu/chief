@@ -1,4 +1,5 @@
-import { readIssues, findIssueOrExit } from '../store.ts'
+import { readIssues, findIssue } from '../store.ts'
+import { findIssueOrExit } from '../validate.ts'
 import { RESET, DIM, BOLD, GREEN } from '../color.ts'
 
 function formatSection(label: string, content: string): string {
@@ -18,7 +19,7 @@ function formatList(items: string[]): string {
 
 export async function show(idPrefix: string): Promise<void> {
   const store = await readIssues()
-  const issue = findIssueOrExit(store, idPrefix)
+  const issue = findIssueOrExit(findIssue(store, idPrefix))
 
   const status = issue.done ? `${GREEN}done${RESET}` : 'open'
   const parent = issue.parent

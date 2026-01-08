@@ -1,6 +1,6 @@
-import { readIssues, writeIssues, resolveParentIdOrExit, type Issue } from '../store.ts'
+import { readIssues, writeIssues, type Issue } from '../store.ts'
 import { generateId } from '../id.ts'
-import { validateNewIssue, validateOrExit, parseJsonOrExit } from '../validate.ts'
+import { validateNewIssue, validateOrExit, parseJsonOrExit, resolveParentIdOrExit } from '../validate.ts'
 import { ISSUE_DEFAULTS, NewIssueInputSchema } from '../schema.ts'
 
 function parseInput(json: string) {

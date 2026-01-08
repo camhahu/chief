@@ -72,31 +72,21 @@ export async function writeIssues(
 
 import type { Issue } from './schema.ts'
 
-export function findIssueOrExit(store: IssuesStore, idPrefix: string, label = 'Issue'): Issue {
+export type FindIssueResult =
+  | { issue: Issue }
+  | { error: 'not-found'; idPrefix: string }
+  | { error: 'ambiguous'; idPrefix: string; matches: Issue[] }
+
+export function findIssue(store: IssuesStore, idPrefix: string): FindIssueResult {
   const matches = store.issues.filter((i) => i.id.startsWith(idPrefix))
 
   if (matches.length === 0) {
-    console.error(`${label} ${idPrefix} not found`)
-    process.exit(1)
+    return { error: 'not-found', idPrefix }
   }
 
   if (matches.length > 1) {
-    console.error(`Ambiguous ${label.toLowerCase()} ID prefix '${idPrefix}' matches:`)
-    for (const match of matches) {
-      console.error(`  ${match.id} - ${match.title}`)
-    }
-    process.exit(1)
+    return { error: 'ambiguous', idPrefix, matches }
   }
 
-  return matches[0]!
-}
-
-export function resolveParentIdOrExit(
-  store: IssuesStore,
-  parentIdPrefix: string | null
-): string | null {
-  if (parentIdPrefix === null) {
-    return null
-  }
-  return findIssueOrExit(store, parentIdPrefix, 'Parent').id
+  return { issue: matches[0]! }
 }

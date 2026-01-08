@@ -1,6 +1,7 @@
 import { type Issue, type IssuesStore, IssueSchema } from './schema.ts'
 import { ValidationError } from './errors.ts'
 import { z } from 'zod'
+import { findIssue, type FindIssueResult } from './store.ts'
 
 export { ValidationError }
 
@@ -14,6 +15,30 @@ export function validateOrExit(fn: () => void): void {
     }
     throw err
   }
+}
+
+export function findIssueOrExit(result: FindIssueResult, label = 'Issue'): Issue {
+  if ('issue' in result) {
+    return result.issue
+  }
+
+  if (result.error === 'not-found') {
+    console.error(`${label} ${result.idPrefix} not found`)
+    process.exit(1)
+  }
+
+  console.error(`Ambiguous ${label.toLowerCase()} ID prefix '${result.idPrefix}' matches:`)
+  for (const match of result.matches) {
+    console.error(`  ${match.id} - ${match.title}`)
+  }
+  process.exit(1)
+}
+
+export function resolveParentIdOrExit(store: IssuesStore, parentIdPrefix: string | null): string | null {
+  if (parentIdPrefix === null) {
+    return null
+  }
+  return findIssueOrExit(findIssue(store, parentIdPrefix), 'Parent').id
 }
 
 function formatZodError(error: z.core.$ZodError): string {

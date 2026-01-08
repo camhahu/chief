@@ -1,5 +1,5 @@
-import { readIssues, writeIssues, findIssueOrExit, resolveParentIdOrExit } from '../store.ts'
-import { validateIssueFields, validateParentRef, validateOrExit, parseJsonOrExit } from '../validate.ts'
+import { readIssues, writeIssues, findIssue } from '../store.ts'
+import { validateIssueFields, validateParentRef, validateOrExit, parseJsonOrExit, findIssueOrExit, resolveParentIdOrExit } from '../validate.ts'
 import { UPDATABLE_FIELD_NAMES, UpdateIssueInputSchema } from '../schema.ts'
 import { ValidationError } from '../errors.ts'
 
@@ -29,7 +29,7 @@ export async function update(idPrefix: string, jsonArg: string): Promise<void> {
   const updates = parseJsonOrExit(jsonArg, parseUpdateInput)
 
   const store = await readIssues()
-  const issue = findIssueOrExit(store, idPrefix)
+  const issue = findIssueOrExit(findIssue(store, idPrefix))
 
   if (updates.title !== undefined) issue.title = updates.title
   if (updates.parent !== undefined) issue.parent = resolveParentIdOrExit(store, updates.parent)
