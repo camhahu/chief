@@ -17,20 +17,10 @@ Local issue tracking in `.issues/issues.json`.
 curl -fsSL https://raw.githubusercontent.com/camhahu/chief/main/install.sh | bash
 ```
 
-## Usage
-
-```bash
-chief init                             # Initialize .issues directory
-
-chief list                             # 1. See open issues
-chief show abc123                      # 2. View full details
-chief new '{"title": "Fix bug"}'       # 3. Create issue
-chief done abc123                      # 4. Mark complete
-```
-
 ## Commands
 
 ```bash
+chief init                             # Initialize .issues directory
 chief list                             # Open issues
 chief list --all                       # Include completed
 chief list --label bug                 # Filter by label
@@ -43,6 +33,8 @@ chief update <id> '<json>'             # Update fields
 chief note <id> "text"                 # Add note
 ```
 
+ID prefixes work: `chief show ab` matches `abc123` if unambiguous.
+
 ## Creating Issues
 
 ```bash
@@ -51,9 +43,39 @@ chief new '{"title": "Add login page", "labels": ["feature"], "context": "Users 
 
 Fields: `title` (required), `labels`, `context`, `criteria`, `parent`, `notes`
 
-ID prefixes work: `chief show ab` matches `abc123` if unambiguous.
+## Labels
 
-## References
+```bash
+chief new '{"title": "...", "labels": ["bug"]}'      # Create with labels
+chief update <id> '{"labels": ["bug", "urgent"]}'    # Update labels
+chief list --label bug                               # Filter by label
+```
 
-- [planning.md](references/planning.md) - Parent/child issues
-- [labels.md](references/labels.md) - Labels
+Common labels: `bug`, `feature`, `docs`, `refactor`, `test`, `blocked`
+
+## Parent/Child Issues
+
+```bash
+chief new '{"title": "...", "parent": "<id>"}'   # Create subtask
+chief update <id> '{"parent": null}'             # Make top-level
+chief update <id> '{"parent": "<new-id>"}'       # Change parent
+```
+
+Example:
+```bash
+chief new '{"title": "User authentication", "labels": ["feature"]}'
+# Output: Created issue abc123
+
+chief new '{"title": "Design login form", "parent": "abc123"}'
+chief new '{"title": "Implement OAuth", "parent": "abc123"}'
+
+chief list
+# abc123 [ ] User authentication [feature]
+#   def456 [ ] Design login form
+#   ghi789 [ ] Implement OAuth
+```
+
+Rules:
+- One level deep only (no grandchildren)
+- `chief remove` deletes issue and all children
+- An issue with children cannot become a child

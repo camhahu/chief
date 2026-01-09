@@ -1,6 +1,8 @@
+import { rmSync } from 'node:fs'
+
 const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/camhahu/chief/main'
 
-const SKILL_FILES = ['skill/SKILL.md', 'skill/references/planning.md', 'skill/references/labels.md']
+const SKILL_FILES = ['skill/SKILL.md']
 
 const TARGET_PATHS: Record<string, { project: string; global: string | null }> = {
   opencode: { project: '.opencode/skill/chief', global: '.config/opencode/skill/chief' },
@@ -55,6 +57,9 @@ export async function addSkill(target: string, global: boolean): Promise<void> {
   } else {
     basePath = paths.project
   }
+
+  // Remove existing skill directory to clean up old files
+  rmSync(basePath, { recursive: true, force: true })
 
   const files = await Promise.all(
     SKILL_FILES.map(async (file) => {

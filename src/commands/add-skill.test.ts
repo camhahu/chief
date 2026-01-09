@@ -8,20 +8,14 @@ test('chief add-skill opencode installs skill files to project', async () => {
   const result = await $`bun run ${CLI} add-skill opencode`.cwd(testDir).text()
 
   const lines = result.trim().split('\n')
-  expect(lines).toHaveLength(3)
+  expect(lines).toHaveLength(1)
   expect(lines[0]).toBe('.opencode/skill/chief/SKILL.md')
-  expect(lines[1]).toBe('.opencode/skill/chief/references/planning.md')
-  expect(lines[2]).toBe('.opencode/skill/chief/references/labels.md')
 
   const skillFile = await Bun.file(`${testDir}/.opencode/skill/chief/SKILL.md`).text()
   expect(skillFile).toContain('name: chief')
   expect(skillFile).toContain('chief init')
-
-  const planningFile = await Bun.file(`${testDir}/.opencode/skill/chief/references/planning.md`).text()
-  expect(planningFile).toContain('Parent/Child Issues')
-
-  const labelsFile = await Bun.file(`${testDir}/.opencode/skill/chief/references/labels.md`).text()
-  expect(labelsFile).toContain('Labels')
+  expect(skillFile).toContain('Parent/Child Issues')
+  expect(skillFile).toContain('Labels')
 })
 
 test('chief add-skill claude installs to .claude/skills path', async () => {
@@ -126,9 +120,8 @@ test('chief add-skill opencode --global installs to user config', async () => {
   const result = await $`HOME=${globalDir} bun run ${CLI} add-skill opencode --global`.cwd(testDir).text()
 
   const lines = result.trim().split('\n')
+  expect(lines).toHaveLength(1)
   expect(lines[0]).toBe(`${globalDir}/.config/opencode/skill/chief/SKILL.md`)
-  expect(lines[1]).toBe(`${globalDir}/.config/opencode/skill/chief/references/planning.md`)
-  expect(lines[2]).toBe(`${globalDir}/.config/opencode/skill/chief/references/labels.md`)
 
   const skillFile = await Bun.file(`${globalDir}/.config/opencode/skill/chief/SKILL.md`).text()
   expect(skillFile).toContain('name: chief')
